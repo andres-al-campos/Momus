@@ -1,3 +1,6 @@
+// Chrome exposes `chrome`, Firefox exposes `browser`.
+const browser = globalThis.browser ?? globalThis.chrome;
+
 // Store scraped data
 let scrapedData = null;
 let bulkScrapeQueue = [];
