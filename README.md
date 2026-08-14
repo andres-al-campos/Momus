@@ -1,6 +1,6 @@
 # Momus — Google Maps Review Analyzer
 
-A Firefox extension that scrapes and analyzes Google Maps reviews for apartment hunting and location research. Momus scrapes every review from a location, flags fake-review patterns and red flags, and, once you've gathered several locations, ranks them side by side with the included `scripts/analyze.js` script and `scripts/compare.html` dashboard.
+A Firefox and Chrome extension that scrapes and analyzes Google Maps reviews for apartment hunting and location research. Momus scrapes every review from a location, flags fake-review patterns and red flags, and, once you've gathered several locations, ranks them side by side with the included `scripts/analyze.js` script and `scripts/compare.html` dashboard.
 
 ## Features
 
@@ -15,12 +15,24 @@ A Firefox extension that scrapes and analyzes Google Maps reviews for apartment 
 
 ### Option 1: Load Temporarily (for testing)
 
+**Firefox**
+
 1. Download or clone this repository
 2. Open Firefox and navigate to `about:debugging`
 3. Click "This Firefox"
 4. Click "Load Temporary Add-on..."
 5. Navigate to the extension folder and select `manifest.json`
 6. The extension will be loaded until you restart Firefox
+
+**Chrome**
+
+1. Download or clone this repository
+2. Open Chrome and navigate to `chrome://extensions`
+3. Enable "Developer mode" (top right)
+4. Click "Load unpacked" and select the repository folder
+
+Chrome loads an unpacked directory rather than a `.zip`; the built zip is for
+Web Store submission.
 
 ### Option 2: Create a Distributable Package
 
@@ -231,7 +243,7 @@ If the extension doesn't load all reviews, try:
 
 ### Technologies Used
 - **Typo.js**: Spell checking library using Hunspell dictionaries
-- **Firefox WebExtensions API**: For browser integration
+- **WebExtensions API**: For browser integration (Manifest V3, one manifest for both browsers)
 - **Content Scripts**: Run on Google Maps pages to scrape data
 
 ### Limitations
@@ -257,7 +269,6 @@ Ideas for future versions:
 - Cross-platform aggregation (Yelp, etc.)
 - Sentiment analysis
 - Local storage of past scrapes
-- Chrome/Edge support
 
 ## Development
 
@@ -296,9 +307,9 @@ momus/
 ### Making Changes
 
 1. Modify the relevant files
-2. Go to `about:debugging` in Firefox
-3. Click "Reload" on the extension
-4. Test on a Google Maps location page
+2. Reload the extension: `about:debugging` in Firefox, or `chrome://extensions`
+   in Chrome, then click "Reload"
+3. Test on a Google Maps location page
 
 ### Debugging
 

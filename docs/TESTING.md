@@ -147,6 +147,10 @@ Check browser console during scraping:
 ## Browser Compatibility
 
 - [ ] Works in Firefox (primary target)
+- [ ] Works in Chrome
+- [ ] Export produces a valid JSON file in both browsers (the download path
+      differs most between them - Chrome's service worker has no blob URLs)
+- [ ] Export of reviews containing accents/CJK decodes correctly
 - [ ] No errors in console
 - [ ] UI renders correctly
 
