@@ -49,14 +49,19 @@ fi
 # --- Build ---------------------------------------------------------------------
 echo "🔨 Building..."
 ./build.sh >/dev/null
-ZIP=$(ls -t artifacts/*.zip | head -1)
-[ -f "$ZIP" ] || { echo "❌ No build artifact found in artifacts/. Did build.sh succeed?"; exit 1; }
-echo "   Built: $ZIP"
+# Attach both browser packages. Picking just the newest zip would silently
+# ship one browser and drop the other.
+FIREFOX_ZIP="artifacts/momus-${VERSION}-firefox.zip"
+CHROME_ZIP="artifacts/momus-${VERSION}-chrome.zip"
+for ZIP in "$FIREFOX_ZIP" "$CHROME_ZIP"; do
+    [ -f "$ZIP" ] || { echo "❌ Missing build artifact $ZIP. Did build.sh succeed?"; exit 1; }
+    echo "   Built: $ZIP"
+done
 
 # --- Release -------------------------------------------------------------------
 # --generate-notes auto-writes notes from commits since the previous release.
 echo "🚀 Creating GitHub release $TAG..."
-gh release create "$TAG" "$ZIP" \
+gh release create "$TAG" "$FIREFOX_ZIP" "$CHROME_ZIP" \
     --title "Momus $VERSION" \
     --generate-notes
 

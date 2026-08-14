@@ -31,27 +31,44 @@ echo "📊 Checking file sizes..."
 echo "   Total size:      $(du -sh . | cut -f1)"
 echo "   Dictionary size: $(du -sh dictionaries | cut -f1)"
 
+VERSION=$(jq -r .version manifest.json 2>/dev/null || echo "dev")
+
+# The single list of things the extension does NOT ship. Both browser builds
+# read from this, so the two packages cannot drift apart.
+EXCLUDES=(build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/)
+
 echo ""
 echo "📦 Building with web-ext..."
 mkdir -p artifacts
 
-# Bundle only the files the extension ships; exclude docs, dev tooling, data, etc.
+# One MV3 manifest serves both browsers: Firefox honours browser_specific_settings,
+# Chrome ignores it. So the two zips have identical contents and differ in name only.
 npx web-ext build --source-dir . --artifacts-dir artifacts --overwrite-dest \
-    --ignore-files build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/
+    --filename "momus-${VERSION}-firefox.zip" \
+    --ignore-files "${EXCLUDES[@]}"
+
+npx web-ext build --source-dir . --artifacts-dir artifacts --overwrite-dest \
+    --filename "momus-${VERSION}-chrome.zip" \
+    --ignore-files "${EXCLUDES[@]}"
 
 echo ""
 echo "✅ Build complete!"
-ls -lh artifacts/*.zip | tail -1
+ls -lh "artifacts/momus-${VERSION}-firefox.zip" "artifacts/momus-${VERSION}-chrome.zip"
 
 echo ""
 echo "📋 Installation instructions:"
-echo "   1. Open Firefox and go to about:debugging"
-echo "   2. Click 'This Firefox'"
-echo "   3. Click 'Load Temporary Add-on'"
-echo "   4. Select manifest.json from this directory"
 echo ""
-echo "   Or install the built package:"
-echo "   1. Go to about:addons"
-echo "   2. Click the gear icon"
-echo "   3. Select 'Install Add-on From File'"
-echo "   4. Choose the .zip file from artifacts/"
+echo "   Firefox (this directory, for development):"
+echo "   1. Go to about:debugging → 'This Firefox'"
+echo "   2. Click 'Load Temporary Add-on' and select manifest.json"
+echo ""
+echo "   Firefox (the built package):"
+echo "   1. Go to about:addons → gear icon"
+echo "   2. Select 'Install Add-on From File'"
+echo "   3. Choose artifacts/momus-${VERSION}-firefox.zip"
+echo ""
+echo "   Chrome:"
+echo "   1. Go to chrome://extensions and enable 'Developer mode'"
+echo "   2. Click 'Load unpacked' and select this directory"
+echo "      (Chrome loads an unpacked folder, not the .zip - the zip is for"
+echo "       Web Store submission.)"
