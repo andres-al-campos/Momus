@@ -5,7 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "./build.sh",
+    "build": "./build.sh package",
+    "start": "./build.sh",
     "analyze": "node scripts/analyze.js"
   },
   "devDependencies": {

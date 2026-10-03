@@ -48,7 +48,7 @@ fi
 
 # --- Build ---------------------------------------------------------------------
 echo "🔨 Building..."
-./build.sh >/dev/null
+./build.sh package >/dev/null
 # Attach both browser packages. Picking just the newest zip would silently
 # ship one browser and drop the other.
 FIREFOX_ZIP="artifacts/momus-${VERSION}-firefox.zip"

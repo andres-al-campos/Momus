@@ -42,15 +42,13 @@ files the extension actually needs (excluding docs, dev scripts, `reviews/`,
 `node_modules/`, and the analysis tooling):
 
 ```bash
-./build.sh
+./build.sh package
 # or, equivalently:
 npm run build
 ```
 
-If [`web-ext`](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/)
-is installed (`npm install -g web-ext`), the script uses it and writes the package to
-`artifacts/`. Otherwise it falls back to a plain `zip`, producing `momus.zip` in the
-project root.
+The script uses the project's own copy of [`web-ext`](https://extensionworkshop.com/documentation/develop/getting-started-with-web-ext/)
+(installing it on first run) and writes a Firefox and a Chrome zip to `artifacts/`.
 
 Then, to install the package in Firefox:
 
@@ -306,9 +304,9 @@ momus/
 
 ### Making Changes
 
-1. Modify the relevant files
-2. Reload the extension: `about:debugging` in Firefox, or `chrome://extensions`
-   in Chrome, then click "Reload"
+1. Run `./build.sh` (Firefox) or `./build.sh chrome`. It opens the browser on
+   Google Maps with the extension loaded, in a fresh temporary profile.
+2. Modify the relevant files; the extension reloads itself on save
 3. Test on a Google Maps location page
 
 ### Debugging
