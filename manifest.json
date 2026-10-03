@@ -41,7 +41,7 @@
   "web_accessible_resources": [
     {
       "resources": ["lib/typo.js", "dictionaries/*"],
-      "matches": ["*://www.google.com/maps/*"]
+      "matches": ["*://www.google.com/*"]
     }
   ]
 }
