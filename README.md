@@ -8,7 +8,8 @@ A Firefox and Chrome extension that scrapes and analyzes Google Maps reviews for
 - **Fake Review Detection**: Calculates a "suspicion score" based on bimodal distribution (lots of 5-star and 1-star, few middle reviews)
 - **Spelling Error Analysis**: Uses Typo.js to count spelling errors in reviews by rating (fake reviews often have more errors in 5-star reviews)
 - **Red Flag Detection**: Automatically flags reviews mentioning pests, mold, crime, management issues, noise, and other problems
-- **Flexible Export**: Download complete data as JSON, or filter to show only 2-4 star reviews (the most informative ones)
+- **Bulk Scrape**: Paste several place URLs and the extension scrapes each in turn, downloading a JSON file per location
+- **JSON Export**: Download the complete data as JSON
 - **Summary Copy**: Quick copy-paste summary of key stats for easy comparison
 
 ## Installation
@@ -72,9 +73,8 @@ Then, to install the package in Firefox:
    - **2-4 Star Reviews**: Count of "middle" reviews (most informative)
    - **Suspicion Score**: 0-1 scale, higher = more suspicious distribution (0.8+ is very suspicious)
    - **Red Flags**: Keywords found and their counts
-7. Optional: Check "Only export 2-4 star reviews" to filter your download
-8. Click "Download as JSON" to save the full data
-9. Click "Copy Summary" to get a quick text summary for pasting
+7. Click "Download as JSON" to save the full data
+8. Click "Copy Summary" to get a quick text summary for pasting
 
 ## Understanding the Output
 
@@ -247,7 +247,7 @@ If the extension doesn't load all reviews, try:
 - **Content Scripts**: Run on Google Maps pages to scrape data
 
 ### Limitations
-- **One scrape at a time**: The extension scrapes a single location per run; multi-location ranking is done afterward by feeding the saved JSON files to `scripts/analyze.js` / `scripts/compare.html` (see "Comparing Multiple Locations" above)
+- **Ranking happens outside the extension**: Bulk Scrape saves one JSON file per location; comparing them is done afterward with `scripts/analyze.js` / `scripts/compare.html` (see "Comparing Multiple Locations" above)
 - **Client-side only**: No server backend, all processing in the browser
 - **Google Maps only**: Doesn't scrape Yelp, ApartmentRatings, etc.
 - **No date parsing**: Dates are stored as-is ("2 months ago") not converted to timestamps
@@ -264,7 +264,7 @@ This extension:
 ## Future Enhancements
 
 Ideas for future versions:
-- In-extension batch mode (scrape multiple locations in one run, without the manual JSON export/import step)
+- In-extension ranking of bulk scrapes, without the JSON export/import step
 - Date parsing (convert relative dates to actual dates)
 - Cross-platform aggregation (Yelp, etc.)
 - Sentiment analysis

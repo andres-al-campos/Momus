@@ -75,10 +75,6 @@ Use this checklist to verify the extension works correctly.
 - [ ] JSON is valid (can be opened in text editor)
 - [ ] Contains all expected fields (name, address, url, stats, reviews, analysis)
 
-2. Enable "Only export 2-4 star reviews" checkbox
-3. Click "Download as JSON" again
-- [ ] Downloaded JSON contains only 2-4 star reviews
-- [ ] `analysis.note` field mentions filtering
 
 ### Test summary copy:
 
