@@ -13,22 +13,19 @@ Rank several scraped places against each other, outside the extension.
 ## How to get to it
 
 1. Put scrapes in `reviews/` (Bulk scrape saves them there).
-2. From the repo root, `npm run analyze` writes `reviews/rankings.csv`; or open
-   `scripts/compare.html` and load the JSON files.
+2. `node scripts/analyze.js [dir] [out.csv]` (defaults: `./reviews` and
+   `<dir>/rankings.csv`); or open `scripts/compare.html` and load the JSON files.
 
 ## Driving it
 
 Preconditions: at least two JSON files in `reviews/`.
 
-- From the repo root, `node scripts/analyze.js`, then check
-  `reviews/rankings.csv` has one ranked row per JSON file (16 on 2026-10-03).
+- `node scripts/analyze.js reviews "$TMPDIR/rankings.csv"`, then check the CSV
+  has one ranked row per JSON file (16 on 2026-10-04).
 - `scripts/compare.html`: open it in the built-in browser and load the files.
 
 ## Gotchas
 
-- `analyze.js` ignores its arguments: it always reads `./reviews` and writes
-  `./reviews/rankings.csv`, relative to where you run it. The README's usage
-  line passes arguments anyway.
 - Weights are constants at the top of `analyze.js`; that's the customization
   point the README points people to.
 - `reprocess.js` duplicates the extension's analysis code (see
@@ -36,7 +33,7 @@ Preconditions: at least two JSON files in `reviews/`.
 
 ## Where it lives
 
-Checked at: `1969a70`
+Checked at: `77ddeb8`
 
 - `scripts/analyze.js`
 - `scripts/compare.html`
