@@ -29,6 +29,10 @@ CAPTCHA ends the run. Drive it with a person present, then save the JSON to
 - The scraper depends on Google's DOM. "No reviews found" or "Could not find
   review container" usually means Google changed its markup; selectors are in
   `findReviewContainer` and `parseAllReviews`.
+- On those errors the popup reloads the page and retries up to 3 times before
+  showing the error.
+- Some markup changes fail silently: a broken histogram selector gives zero
+  counts and NaN stats with no error.
 - A search-results URL isn't a place page and fails with "Not on a Google Maps
   place page".
 - The popup keeps the last scrape in `storage.local`, although the README's

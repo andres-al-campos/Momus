@@ -4,7 +4,7 @@ Get a scrape out of the browser: the full data as JSON, or a short text summary.
 
 ## Sub-features
 
-- Download as JSON (`gmaps_<place>_<date>.json`), with a save dialog
+- Download as JSON (`gmaps_<place>.json`), with a save dialog
 - Copy Summary: key stats and red flags as text
 
 ## How to get to it
@@ -22,6 +22,9 @@ the clipboard.
 
 - Copy Summary does nothing: the button is enabled but has no click handler,
   and `formatSummary` is never called. Found by reading; not yet clicked.
+  Wiring it up isn't enough: `formatSummary` reads `auth1Star`/`auth2Star`/
+  `authLowStar`, which the analysis no longer produces.
+- Filenames have no date, so scraping a place again overwrites its file.
 - Chrome's service worker has no blob URLs, so the download is a base64 data
   URL. It encodes to UTF-8 bytes first; plain `btoa` throws on accents and CJK.
 

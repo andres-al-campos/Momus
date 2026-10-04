@@ -7,8 +7,7 @@ Rank several scraped places against each other, outside the extension.
 - Ranked CSV with weighted critical and important flags (`scripts/analyze.js`)
 - Side-by-side dashboard with sortable columns and jaggedness score
   (`scripts/compare.html`)
-- Re-run newer analysis on old scrapes without re-scraping, including Local
-  Guide analysis the extension doesn't do (`scripts/reprocess.js`)
+- Re-run newer analysis on old scrapes without re-scraping (`scripts/reprocess.js`)
 
 ## How to get to it
 
@@ -27,7 +26,12 @@ Preconditions: at least two JSON files in `reviews/`.
 ## Gotchas
 
 - Weights are constants at the top of `analyze.js`; that's the customization
-  point the README points people to.
+  point the README points people to. `compare.html` has its own flag list and
+  weighs every flag equally, so it won't follow changes there.
+- `CRITICAL_FLAGS` has `bedbugs`/`bed bugs` but the detector also emits
+  singular `bedbug`/`bed bug`, which carry no weight.
+- `reprocess.js` still computes Local Guide analysis, which the CHANGELOG says
+  was removed; the scraper no longer sets `isLocalGuide`, so it's all zeros.
 - `reprocess.js` duplicates the extension's analysis code (see
   [Read the analysis](analysis.md)).
 
