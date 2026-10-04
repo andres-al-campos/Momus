@@ -25,14 +25,12 @@ it directly; otherwise it's a sub-feature.
 - **How to get to it**: the user's path.
 - **Driving it**: preconditions, then steps an agent can follow, or why it's blocked.
 - **Gotchas**: what has bitten us.
-- **Where it lives**: the main files, and the commit they were last checked at.
 
 ## Keeping it current
 
-Update a feature's file in the same commit that changes the feature.
-`features/stale.sh` lists every file whose "Where it lives" files changed
-since its "Checked at" commit. Read those entries against the code, fix what's
-wrong, and bump the commit.
+Update a feature's file in the same commit that changes the feature. Write
+only what a user can do and observe: paths, commands, results. Code locations
+are left out on purpose; read the code when a task needs them.
 
 ## Driving conventions
 

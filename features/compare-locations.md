@@ -34,11 +34,3 @@ Preconditions: at least two JSON files in `reviews/`.
   was removed; the scraper no longer sets `isLocalGuide`, so it's all zeros.
 - `reprocess.js` duplicates the extension's analysis code (see
   [Read the analysis](analysis.md)).
-
-## Where it lives
-
-Checked at: `77ddeb8`
-
-- `scripts/analyze.js`
-- `scripts/compare.html`
-- `scripts/reprocess.js`

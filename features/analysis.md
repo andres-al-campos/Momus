@@ -33,12 +33,3 @@ would make this feature checkable without Google.
 - `scripts/reprocess.js` keeps its own copy of the analysis helpers; a change
   here has to be made there too, or the two drift apart.
 - Proper nouns and slang count as spelling errors.
-
-## Where it lives
-
-Checked at: `1969a70`
-
-- `content/content.js`: `calculateAnalysis` and the helpers above it
-- `content/keywords.js`: red-flag keyword list
-- `popup/popup.js`: `displayResults`
-- `lib/typo.js`, `dictionaries/`: spell checking

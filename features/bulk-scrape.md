@@ -30,10 +30,3 @@ Blocked for unattended runs, for the same reason as Scrape a place.
   a place fail, and the run moves on to the next one.
 - Unverified: whether the run survives the popup closing, since the loop lives
   in the popup.
-
-## Where it lives
-
-Checked at: `1969a70`
-
-- `popup/popup.js`: `startBulkScrape`, `scrapeNextUrl`, `cancelBulkScrape`
-- `background.js`: saves to `reviews/` without a prompt

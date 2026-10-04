@@ -37,11 +37,3 @@ CAPTCHA ends the run. Drive it with a person present, then save the JSON to
   place page".
 - The popup keeps the last scrape in `storage.local`, although the README's
   privacy section says nothing persists.
-
-## Where it lives
-
-Checked at: `1969a70`
-
-- `popup/popup.js`: `handleScrapeClick`, `triggerScrape`
-- `content/content.js`: `performScrape`, message listener
-- `content/scraper.js`: sorting, scrolling, parsing the DOM

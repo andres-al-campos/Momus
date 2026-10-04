@@ -27,10 +27,3 @@ the clipboard.
 - Filenames have no date, so scraping a place again overwrites its file.
 - Chrome's service worker has no blob URLs, so the download is a base64 data
   URL. It encodes to UTF-8 bytes first; plain `btoa` throws on accents and CJK.
-
-## Where it lives
-
-Checked at: `1969a70`
-
-- `popup/popup.js`: `handleDownloadClick`, `formatSummary`
-- `background.js`: `toJsonDataUrl`, the download itself
