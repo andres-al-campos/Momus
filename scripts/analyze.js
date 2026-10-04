@@ -314,8 +314,15 @@ function escapeCSV(value) {
 
 // Main
 function main() {
-  const inputDir = './reviews';
-  const outputFile = './reviews/rankings.csv';
+  const inputDir = process.argv[2] || './reviews';
+  const outputFile = process.argv[3] || path.join(inputDir, 'rankings.csv');
+
+  // A directory the user named should exist; only the default gets created.
+  if (process.argv[2] && !fs.existsSync(inputDir)) {
+    console.error(`Directory not found: ${inputDir}`);
+    console.error('Check the path, or run with no arguments to use ./reviews.');
+    process.exit(1);
+  }
 
   // Create reviews directory if it doesn't exist
   if (!fs.existsSync(inputDir)) {
