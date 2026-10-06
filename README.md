@@ -317,7 +317,7 @@ momus/
 
 ## License
 
-MIT License - feel free to modify and distribute.
+AGPL-3.0. See [LICENSE](LICENSE).
 
 ## Credits
 
