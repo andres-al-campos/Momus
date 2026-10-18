@@ -25,6 +25,13 @@ Look-and-feel calls, with the owner's why.
   never uses red because it's grading your own browsing, Momus is judging an
   apartment.
 
+- **Keywords tell one story per topic** (2026-10-18): "pools (10 reviews)",
+  then "90% rated ≥4★" in the row's one colour, the 1★ share and red flags
+  (with counts) in grey. No average, since it moves with the ≥4★ share. Say
+  "rated", never "liked": Momus knows a review's stars, not what it thinks of
+  the topic. One colour per row, because colouring each number made each
+  colour look like it meant something different.
+
 ## Feature map
 
 `features/` lists what a user can do and how to drive it. Read its README
