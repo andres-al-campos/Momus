@@ -19,8 +19,9 @@ Look-and-feel calls, with the owner's why.
 - **WebTime's design language** (2026-10-18): its tokens, IBM Plex Sans/Mono,
   dark ground. Mockups in `designs/`.
 - **Colour says good or bad for the place** (2026-10-18). Data bars are
-  WebTime's blue. Numbers are green when good for the place and red when
-  bad, as in the old keyword list: "pretty intuitive." Unlike WebTime, which
+  WebTime's blue. Numbers are green when good for the place, amber in
+  between, and red when bad, as in the old keyword list: "pretty intuitive."
+  Three steps are enough; no lighter in-between greens. Unlike WebTime, which
   never uses red because it's grading your own browsing, Momus is judging an
   apartment.
 
