@@ -6,7 +6,7 @@ A Firefox and Chrome extension that scrapes and analyzes Google Maps reviews for
 
 - **Complete Review Scraping**: Automatically scrolls and loads all reviews from a Google Maps location page
 - **Fake Review Detection**: Calculates a "suspicion score" based on bimodal distribution (lots of 5-star and 1-star, few middle reviews)
-- **Spelling Error Analysis**: Uses Typo.js to count spelling errors in reviews by rating (fake reviews often have more errors in 5-star reviews)
+- **Spelling Error Analysis**: Uses Typo.js to count spelling errors in reviews by rating. Evidence only: typos alone don't tell fake reviews from real ones, but one rating far cleaner than the rest is unusual
 - **Red Flag Detection**: Automatically flags reviews mentioning pests, mold, crime, management issues, noise, and other problems
 - **Bulk Scrape**: Paste several place URLs and the extension scrapes each in turn, downloading a JSON file per location
 - **JSON Export**: Download the complete data as JSON

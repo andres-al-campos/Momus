@@ -42,7 +42,6 @@ const IMPORTANT_FLAGS = {
 const WEIGHTS = {
   extremeReviewPct: -20,      // Lower extreme % = better
   middlePercentage: 5,        // More middle reviews = better
-  middleSpellingErrors: -2,   // Fewer errors = better
   criticalFlags: -1,          // Per mention in middle reviews
   importantFlags: -1,         // Per mention in middle reviews
   fiveStarClusteringCV: -15,  // Lower CV = more evenly distributed = better
@@ -98,9 +97,6 @@ function calculateScore(data) {
 
   // Middle review percentage (authenticity)
   score += (middle.percentageOfTotal || 0) * WEIGHTS.middlePercentage;
-
-  // Spelling errors in middle reviews (quality)
-  score += (middle.avgSpellingErrors || 0) * WEIGHTS.middleSpellingErrors;
 
   // 5-star clustering (recent reviews) - high CV = suspicious
   const recentCV = data.analysis.fiveStarClustering?.recent?.cv || 0;
