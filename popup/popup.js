@@ -1,5 +1,4 @@
-// Chrome exposes `chrome`, Firefox exposes `browser`.
-const browser = globalThis.browser ?? globalThis.chrome;
+// `browser` comes from lib/browser.js; summarize() from summarize.js.
 
 // Store scraped data
 let scrapedData = null;
@@ -12,13 +11,14 @@ const scrapeBtn = document.getElementById('scrapeBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const copyBtn = document.getElementById('copyBtn');
 const statusEl = document.getElementById('status');
-const resultsEl = document.getElementById('results');
 const sortOrderSelect = document.getElementById('sortOrder');
 const maxReviewsSelect = document.getElementById('maxReviews');
+const scrapeView = document.getElementById('scrapeView');
+const resultsView = document.getElementById('resultsView');
+const footer = document.getElementById('footer');
+const viewToggle = document.getElementById('viewToggle');
 
 // Bulk scrape elements
-const bulkScrapeToggle = document.getElementById('bulkScrapeToggle');
-const bulkScrapeContainer = document.getElementById('bulkScrapeContainer');
 const bulkUrlsTextarea = document.getElementById('bulkUrls');
 const startBulkBtn = document.getElementById('startBulkBtn');
 const cancelBulkBtn = document.getElementById('cancelBulkBtn');
@@ -26,21 +26,17 @@ const bulkProgressEl = document.getElementById('bulkProgress');
 const bulkProgressText = document.getElementById('bulkProgressText');
 const bulkProgressBar = document.getElementById('bulkProgressBar');
 
-// Load saved data and settings on popup open
+// The popup opens on the last scrape, whatever page you're on: it answers
+// "did I scan this one already?" while hopping between places.
 browser.storage.local.get(['lastScrapeData', 'sortOrder', 'maxReviews']).then(result => {
+  if (result.sortOrder) sortOrderSelect.value = result.sortOrder;
+  if (result.maxReviews) maxReviewsSelect.value = result.maxReviews;
   if (result.lastScrapeData) {
     scrapedData = result.lastScrapeData;
     displayResults(scrapedData);
-    setStatus('complete', 'Data loaded from previous scrape');
-    downloadBtn.disabled = false;
-    copyBtn.disabled = false;
-  }
-  // Restore saved settings
-  if (result.sortOrder) {
-    sortOrderSelect.value = result.sortOrder;
-  }
-  if (result.maxReviews) {
-    maxReviewsSelect.value = result.maxReviews;
+    showView('results');
+  } else {
+    showView('scrape');
   }
 });
 
@@ -54,18 +50,29 @@ maxReviewsSelect.addEventListener('change', () => {
 
 // Event listeners
 scrapeBtn.addEventListener('click', handleScrapeClick);
-downloadBtn.addEventListener('click', handleDownloadClick);
-bulkScrapeToggle.addEventListener('click', toggleBulkScrape);
+downloadBtn.addEventListener('click', () => handleDownloadClick());
+copyBtn.addEventListener('click', handleCopyClick);
 startBulkBtn.addEventListener('click', startBulkScrape);
 cancelBulkBtn.addEventListener('click', cancelBulkScrape);
+viewToggle.addEventListener('click', () => showView(resultsView.hidden ? 'results' : 'scrape'));
+
+// Scrape and results are a click apart: one column that switches between them.
+function showView(view) {
+  const results = view === 'results' && scrapedData;
+  scrapeView.hidden = !!results;
+  resultsView.hidden = !results;
+  footer.hidden = !results;
+  document.getElementById('place').hidden = !results;
+  document.getElementById('brand').hidden = !!results;
+  viewToggle.hidden = !scrapedData;
+  viewToggle.textContent = results ? 'New scrape' : 'Back to results';
+}
 
 // Listen for messages from content script
 browser.runtime.onMessage.addListener((message) => {
   if (message.action === 'scrapeProgress') {
-    // Update status with review count during scrolling
     setStatus('scraping', `Loaded ${message.count} reviews...`);
   } else if (message.action === 'scrapeAnalyzing') {
-    // Update status when scrolling done, analysis starting
     setStatus('scraping', `Analyzing ${message.count} reviews...`);
   } else if (message.action === 'scrapeComplete') {
     scrapedData = message.data;
@@ -74,16 +81,14 @@ browser.runtime.onMessage.addListener((message) => {
     browser.storage.local.set({ lastScrapeData: scrapedData });
 
     displayResults(scrapedData);
-
-    setStatus('complete', 'Scraping complete! Downloading...');
-    downloadBtn.disabled = false;
-    copyBtn.disabled = false;
+    setStatus('complete', 'Scraping complete.');
     scrapeBtn.disabled = false;
-    bulkScrapeToggle.disabled = false;
+    startBulkBtn.disabled = false;
+    if (!isBulkScraping) showView('results');
 
     // Auto-download the JSON file
     setTimeout(() => {
-      handleDownloadClick(true); // Pass true for auto-download
+      handleDownloadClick(true);
     }, 500);
   } else if (message.action === 'scrapeError') {
     handleScrapeError(message.error);
@@ -97,33 +102,30 @@ const MAX_SCRAPE_RETRIES = 3;
 async function handleScrapeClick() {
   try {
     scrapeBtn.disabled = true;
-    bulkScrapeToggle.disabled = true;
-    downloadBtn.disabled = true;
-    copyBtn.disabled = true;
-    resultsEl.hidden = true;
+    startBulkBtn.disabled = true;
     setStatus('scanning', 'Scanning reviews...');
 
     // Reset retry count on manual click
     scrapeRetryCount = 0;
 
-    // Get active tab and send message to content script
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-
     if (tabs.length === 0) {
-      throw new Error('No active tab found');
+      throw new Error('No active tab found. Click into the Google Maps tab, then try again.');
     }
 
-    const options = {
-      sortOrder: sortOrderSelect.value,
-      maxReviews: parseInt(maxReviewsSelect.value) || 0
-    };
-
-    await browser.tabs.sendMessage(tabs[0].id, { action: 'scrape', options });
-
+    await browser.tabs.sendMessage(tabs[0].id, { action: 'scrape', options: scrapeOptions() });
   } catch (error) {
-    setStatus('error', `Error: ${error.message}`);
+    setStatus('error', `${error.message} Open a place on Google Maps (its URL contains /maps/place/) and reload the page.`);
     scrapeBtn.disabled = false;
+    startBulkBtn.disabled = false;
   }
+}
+
+function scrapeOptions() {
+  return {
+    sortOrder: sortOrderSelect.value,
+    maxReviews: parseInt(maxReviewsSelect.value) || 0
+  };
 }
 
 async function handleScrapeError(errorMessage) {
@@ -141,37 +143,26 @@ async function handleScrapeError(errorMessage) {
     setStatus('warning', `Retrying... (attempt ${scrapeRetryCount + 1}/${MAX_SCRAPE_RETRIES + 1})`);
 
     try {
-      // Get active tab
       const tabs = await browser.tabs.query({ active: true, currentWindow: true });
       if (tabs.length === 0) {
         throw new Error('No active tab found');
       }
 
-      // Reload the page
+      // Reload the page, wait for it, and retry the scrape
       await browser.tabs.reload(tabs[0].id);
-
-      // Wait for page to reload (2 seconds)
       await sleep(2000);
-
-      // Retry the scrape
-      const options = {
-        sortOrder: sortOrderSelect.value,
-        maxReviews: parseInt(maxReviewsSelect.value) || 0
-      };
-
-      await browser.tabs.sendMessage(tabs[0].id, { action: 'scrape', options });
+      await browser.tabs.sendMessage(tabs[0].id, { action: 'scrape', options: scrapeOptions() });
     } catch (retryError) {
       setStatus('error', `Retry failed: ${retryError.message}`);
       scrapeBtn.disabled = false;
-      bulkScrapeToggle.disabled = false;
+      startBulkBtn.disabled = false;
       scrapeRetryCount = 0;
     }
   } else {
-    // No retry or max retries reached
     const retryMsg = scrapeRetryCount >= MAX_SCRAPE_RETRIES ? ' (max retries reached)' : '';
     setStatus('error', `Error: ${errorMessage}${retryMsg}`);
     scrapeBtn.disabled = false;
-    bulkScrapeToggle.disabled = false;
+    startBulkBtn.disabled = false;
     scrapeRetryCount = 0;
   }
 }
@@ -181,8 +172,6 @@ function handleDownloadClick(autoDownload = false) {
     console.log('[Popup] No data to download');
     return;
   }
-
-  console.log('[Popup] Download button clicked, autoDownload:', autoDownload, 'isBulkScraping:', isBulkScraping);
 
   // Build the download structure with all three analyses
   const dataToDownload = {
@@ -221,421 +210,190 @@ function handleDownloadClick(autoDownload = false) {
   const filename = `gmaps_${locationName}.json`;
 
   // Send to background script to handle download (survives popup closing)
-  const jsonStr = JSON.stringify(dataToDownload, null, 2);
-  console.log('[Popup] Sending download message to background, filename:', filename, 'size:', jsonStr.length);
-
   browser.runtime.sendMessage({
     action: 'download',
-    jsonData: jsonStr,
+    jsonData: JSON.stringify(dataToDownload, null, 2),
     filename: filename,
     isBulkScrape: isBulkScraping  // Pass bulk scrape status for auto-download behavior
-  }).then(() => {
-    console.log('[Popup] Message sent successfully');
   }).catch(error => {
-    console.error('[Popup] Failed to send message:', error);
+    console.error('[Popup] Failed to send download message:', error);
   });
 
   if (autoDownload) {
-    setStatus('complete', 'Ready to save!');
+    setStatus('complete', 'Scraping complete. JSON saved.');
   }
+}
+
+async function handleCopyClick() {
+  if (!scrapedData) return;
+  try {
+    await navigator.clipboard.writeText(formatSummary(summarize(scrapedData)));
+    flashButton(copyBtn, 'Copied');
+  } catch (error) {
+    console.error('[Popup] Copy failed:', error);
+    flashButton(copyBtn, 'Copy failed');
+  }
+}
+
+function flashButton(button, text) {
+  const original = button.textContent;
+  button.textContent = text;
+  setTimeout(() => { button.textContent = original; }, 1500);
+}
+
+// ---------- rendering ----------
+
+// Builds an element. Children are nodes or strings; strings get a real ★
+// glyph, since IBM Plex has none.
+function el(tag, className, ...children) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  for (const child of children.flat()) {
+    if (child === null || child === undefined || child === false) continue;
+    node.append(typeof child === 'string' ? starText(child) : child);
+  }
+  return node;
+}
+
+function starText(text) {
+  const frag = document.createDocumentFragment();
+  text.split('★').forEach((part, i) => {
+    if (i > 0) {
+      const star = document.createElement('span');
+      star.className = 'star';
+      star.textContent = '★';
+      frag.append(star);
+    }
+    if (part) frag.append(document.createTextNode(part));
+  });
+  return frag;
 }
 
 function displayResults(data) {
-  resultsEl.hidden = false;
+  const view = summarize(data);
 
-  const distribution = data.stats.distribution;
-  const total = data.stats.totalReviews;
-  const scrapedCount = data.reviews?.length || total;
+  document.getElementById('placeName').textContent = view.name;
+  const ratingEl = document.getElementById('placeRating');
+  ratingEl.className = `mono ${view.ratingTone}`;
+  ratingEl.replaceChildren(el('span', null, `${view.rating.toFixed(1)}★`));
+  ratingEl.title = 'Average star rating. Across saved places, 4.3★ and up is good, under 3.8★ is poor.';
+  document.getElementById('placeCount').textContent = view.reviewCount;
 
-  // Calculate actual negative review count (≤3★) from distribution
-  const negativeCount = (distribution[1] || 0) + (distribution[2] || 0) + (distribution[3] || 0);
-  const negativePct = total > 0 ? ((negativeCount / total) * 100).toFixed(0) : 0;
-  const positivePct = total > 0 ? (100 - negativePct) : 0;
-
-  // Update star distribution header with scraped count (not total)
-  document.getElementById('starDistHeader').textContent = `Star Distribution (${scrapedCount} reviews scanned):`;
-
-  // Generate visual bar chart for star distribution
-  const starDistEl = document.getElementById('starDistribution');
-
-  // Find the max count to scale bars relative to each other
-  const maxCount = Math.max(...Object.values(distribution).map(v => v || 0));
-
-  // Clear existing content
-  starDistEl.textContent = '';
-
-  for (let star = 5; star >= 1; star--) {
-    const count = distribution[star] || 0;
-    const percent = total > 0 ? (count / total * 100) : 0;
-    // Scale bar width relative to max count (longest bar = 100%)
-    const barWidth = maxCount > 0 ? (count / maxCount * 100) : 0;
-
-    const row = document.createElement('div');
-    row.className = 'dist-row';
-
-    const starSpan = document.createElement('span');
-    starSpan.className = 'dist-star';
-    starSpan.textContent = `${star}★`;
-
-    const barContainer = document.createElement('div');
-    barContainer.className = 'dist-bar-container';
-
-    const bar = document.createElement('div');
-    bar.className = 'dist-bar';
-    bar.style.width = `${barWidth}%`;
-    barContainer.appendChild(bar);
-
-    const pctSpan = document.createElement('span');
-    pctSpan.className = 'dist-pct';
-    pctSpan.textContent = `${count} (${percent.toFixed(0)}%)`;
-
-    row.appendChild(starSpan);
-    row.appendChild(barContainer);
-    row.appendChild(pctSpan);
-    starDistEl.appendChild(row);
-  }
-
-  // Display clustering metrics (only 5-star and 1-star)
-  const fiveStar = data.analysis.fiveStarClustering || {};
-  const oneStar = data.analysis.oneStarClustering || {};
-
-  const cv5Recent = fiveStar.recent?.cv || 0;
-  const cv5All = fiveStar.allTime?.cv || 0;
-  const cv1Recent = oneStar.recent?.cv || 0;
-  const cv1All = oneStar.allTime?.cv || 0;
-
-  // Helper to set value with suspicious highlighting
-  function setClusterValue(id, value, threshold = 1.0) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.textContent = value.toFixed(2);
-      if (value > threshold) {
-        el.classList.add('suspicious');
-      } else {
-        el.classList.remove('suspicious');
-      }
-    }
-  }
-
-  setClusterValue('cluster5Recent', cv5Recent);
-  setClusterValue('cluster5All', cv5All);
-  setClusterValue('cluster1Recent', cv1Recent);
-  setClusterValue('cluster1All', cv1All);
-
-  // Per-star word counts with ratio calculation
-  const wordCountByRating = data.analysis.all?.wordCountByRating || {};
-
-  // Calculate overall average word count
-  const allWordCounts = Object.values(wordCountByRating).filter(v => v > 0);
-  const avgWordCount = allWordCounts.length > 0
-    ? allWordCounts.reduce((a, b) => a + b, 0) / allWordCounts.length
-    : 0;
-
-  for (let star = 1; star <= 5; star++) {
-    const el = document.getElementById(`words${star}`);
-    if (el) {
-      const val = wordCountByRating[star];
-      if (val && val > 0 && avgWordCount > 0) {
-        const ratio = val / avgWordCount;
-        el.textContent = `${val.toFixed(1)} (${ratio.toFixed(2)}x)`;
-
-        // Color code based on ratio
-        // Remove any existing classes
-        el.classList.remove('suspicious', 'keyword-positive');
-
-        // Add appropriate class based on ratio
-        if (ratio < 0.7) {
-          // Significantly shorter than average - suspicious for 5-star
-          if (star === 5) {
-            el.classList.add('suspicious');
-          }
-        } else if (ratio > 1.3) {
-          // Significantly longer than average - good sign (more detailed)
-          el.classList.add('keyword-positive');
-        }
-      } else {
-        el.textContent = val?.toFixed(1) || '-';
-        el.classList.remove('suspicious', 'keyword-positive');
-      }
-    }
-  }
-
-  // Display authenticity scores if available
-  if (data.analysis.authenticityScores) {
-    const auth = data.analysis.authenticityScores;
-    const authContainer = document.getElementById('authenticityScores');
-    const authContent = document.getElementById('authenticityContent');
-
-    // Determine if likely has fake 1-star reviews
-    const oneStarRatio = parseFloat(auth.oneStarPct) / parseFloat(auth.twoStarPct);
-    const hasFake1Star = oneStarRatio > 10 && parseFloat(auth.oneStarPct) > 15;
-
-    // Clear existing content
-    authContent.textContent = '';
-
-    const authGrid = document.createElement('div');
-    authGrid.className = 'auth-grid';
-
-    // Distribution score (higher = better, inverted from jaggedness)
-    // Based on real data: range 9-51, most 11-38
-    const distScore = parseFloat(auth.distributionScore);
-    let distClass, distLabel, distExplain;
-    if (distScore > 35) {
-      distClass = 'auth-good';
-      distLabel = 'Excellent';
-      distExplain = 'Very smooth distribution';
-    } else if (distScore > 15) {
-      distClass = 'auth-good';
-      distLabel = 'Good';
-      distExplain = 'Normal variation';
-    } else if (distScore > 10) {
-      distClass = 'auth-moderate';
-      distLabel = 'Fair';
-      distExplain = 'Some irregularity';
-    } else {
-      distClass = 'auth-poor';
-      distLabel = 'Poor';
-      distExplain = 'Suspicious distribution';
-    }
-
-    const distRow = document.createElement('div');
-    distRow.className = 'auth-row';
-    const distLabelSpan = document.createElement('span');
-    distLabelSpan.className = 'auth-label';
-    distLabelSpan.textContent = 'Distribution: ';
-    const distValueSpan = document.createElement('span');
-    distValueSpan.className = `auth-value ${distClass}`;
-    distValueSpan.textContent = `${distLabel} (${auth.distributionScore}) - ${distExplain}`;
-    distRow.appendChild(distLabelSpan);
-    distRow.appendChild(distValueSpan);
-    authGrid.appendChild(distRow);
-
-    // Authenticity score (higher = better)
-    // Based on real data: range 2-34, most 5-15
-    const authScore = parseFloat(auth.authenticityScore);
-    let authClass, authLabel, authExplain;
-    if (isNaN(authScore) || auth.authenticityScore === 'N/A') {
-      authClass = '';
-      authLabel = 'N/A';
-      authExplain = 'not enough data';
-    } else if (authScore > 10) {
-      authClass = 'auth-good';
-      authLabel = 'Good';
-      authExplain = 'reviews appear genuine';
-    } else if (authScore > 4) {
-      authClass = 'auth-moderate';
-      authLabel = 'Fair';
-      authExplain = 'some irregularity';
-    } else {
-      authClass = 'auth-poor';
-      authLabel = 'Poor';
-      authExplain = 'reviews cluster at extremes';
-    }
-
-    const authRow = document.createElement('div');
-    authRow.className = 'auth-row';
-    const authLabelSpan = document.createElement('span');
-    authLabelSpan.className = 'auth-label';
-    authLabelSpan.textContent = 'Authenticity: ';
-    const authValueSpan = document.createElement('span');
-    authValueSpan.className = `auth-value ${authClass}`;
-    authValueSpan.textContent = `${authLabel} (${auth.authenticityScore}) - ${authExplain}`;
-    authRow.appendChild(authLabelSpan);
-    authRow.appendChild(authValueSpan);
-    authGrid.appendChild(authRow);
-
-    authContent.appendChild(authGrid);
-
-    // Fake review warning
-    if (hasFake1Star) {
-      const warning = document.createElement('div');
-      warning.className = 'fake-review-warning';
-      const strong = document.createElement('strong');
-      strong.textContent = '🚩 Warning:';
-      warning.appendChild(strong);
-      warning.appendChild(document.createTextNode(` High 1★/2★ ratio (${oneStarRatio.toFixed(1)}x) suggests possible fake 1-star review campaign`));
-      authContent.appendChild(warning);
-    }
-
-    authContainer.hidden = false;
-  }
-
-  // Display red flags from negative reviews (≤3★)
-  const redFlagsList = document.getElementById('redFlagsList');
-  const negativeAnalysis = data.analysis.negative || data.analysis.middle; // fallback for old data
-  const redFlags = Object.entries(negativeAnalysis.redFlagSummary);
-  const negativeWithFlags = redFlags.reduce((sum, [, count]) => sum + count, 0);
-  const negativeReviewTotal = negativeAnalysis.reviewCount || negativeCount;
-
-  // Calculate % of negative reviews that contain red flags
-  const redFlagsPct = negativeReviewTotal > 0
-    ? Math.round((negativeWithFlags / negativeReviewTotal) * 100)
-    : 0;
-
-  // Update red flags header
-  document.getElementById('redFlagsHeader').textContent = `Red Flags (${negativePct}% of ALL reviews are ≤3★, ${redFlagsPct}% of these mention issues):`;
-
-  redFlagsList.textContent = '';
-
-  if (redFlags.length === 0) {
-    const noFlags = document.createElement('div');
-    noFlags.style.color = '#2e7d32';
-    noFlags.textContent = 'No major red flags detected';
-    redFlagsList.appendChild(noFlags);
-  } else {
-    // Sort by count descending
-    redFlags.sort((a, b) => b[1] - a[1]);
-
-    redFlags.forEach(([keyword, count]) => {
-      const flagItem = document.createElement('div');
-      flagItem.className = 'flag-item';
-
-      const keywordSpan = document.createElement('span');
-      keywordSpan.className = 'flag-keyword';
-      keywordSpan.textContent = keyword;
-
-      const countSpan = document.createElement('span');
-      countSpan.className = 'flag-count';
-      countSpan.textContent = `: ${count} mention${count > 1 ? 's' : ''}`;
-
-      flagItem.appendChild(keywordSpan);
-      flagItem.appendChild(countSpan);
-      redFlagsList.appendChild(flagItem);
-    });
-  }
-
-  // Display Google keyword correlation analysis
-  const googleKeywordContainer = document.getElementById('googleKeywordContainer');
-  const googleKeywordList = document.getElementById('googleKeywordList');
-  const correlation = data.analysis.googleKeywordCorrelation;
-
-  if (correlation && Object.keys(correlation).length > 0) {
-    googleKeywordContainer.hidden = false;
-
-    // Update header - show positive % if mostly positive, negative % if mostly negative
-    const headerText = positivePct >= 50
-      ? `Google Keywords (${positivePct}% are ≥4★):`
-      : `Google Keywords (${negativePct}% are ≤3★):`;
-    document.getElementById('googleKeywordHeader').textContent = headerText;
-
-    // Show ALL keywords, sorted by count (most mentioned first)
-    const allKeywords = Object.entries(correlation)
-      .sort((a, b) => b[1].reviewCount - a[1].reviewCount);
-
-    googleKeywordList.textContent = '';
-
-    allKeywords.forEach(([keyword, stats]) => {
-      const topFlags = stats.topRedFlags.map(f => `${f.flag}(${f.count})`).join(', ');
-
-      // Determine if keyword is mostly positive or negative
-      const highRatingPct = 100 - stats.lowRatingPct;
-      const isPositive = highRatingPct > 50;
-      const mainMessage = isPositive
-        ? `${highRatingPct.toFixed(0)}% of these are ≥4★`
-        : `${stats.lowRatingPct.toFixed(0)}% of these are ≤3★`;
-
-      // Color code based on sentiment
-      const messageClass = isPositive ? 'keyword-positive' : 'keyword-warning';
-
-      const item = document.createElement('div');
-      item.className = 'keyword-item';
-
-      const nameDiv = document.createElement('div');
-      nameDiv.className = 'keyword-name';
-      nameDiv.textContent = `"${keyword}" `;
-      const countSpan = document.createElement('span');
-      countSpan.style.color = '#666';
-      countSpan.style.fontSize = '11px';
-      countSpan.textContent = `(${stats.reviewCount} reviews)`;
-      nameDiv.appendChild(countSpan);
-
-      const messageDiv = document.createElement('div');
-      messageDiv.className = messageClass;
-      messageDiv.textContent = mainMessage;
-
-      const detailsDiv = document.createElement('div');
-      detailsDiv.className = 'keyword-details';
-      detailsDiv.textContent = `Avg: ${stats.avgRating}★ | 1★: ${stats.oneStarPct}% | ${stats.redFlagPct.toFixed(0)}% mention red flags${topFlags ? ': ' + topFlags : ''}`;
-
-      item.appendChild(nameDiv);
-      item.appendChild(messageDiv);
-      item.appendChild(detailsDiv);
-      googleKeywordList.appendChild(item);
-    });
-  } else {
-    googleKeywordContainer.hidden = true;
-  }
+  resultsView.replaceChildren(
+    renderTrust(view.trust),
+    renderKeywords(view.keywords),
+    renderRedFlags(view.redFlags),
+  );
 }
 
-function formatSummary(data) {
-  const middleRedFlags = Object.entries(data.analysis.middle.redFlagSummary)
-    .sort((a, b) => b[1] - a[1])
-    .map(([keyword, count]) => `  - ${keyword}: ${count}`)
-    .join('\n');
+function renderTrust(trust) {
+  const curve = el('div', 'curve',
+    trust.curve.map(c => {
+      const bar = el('div', 'b');
+      bar.style.height = `${c.pct.toFixed(0)}%`;
+      return el('div', 'col', el('span', 'pct', `${Math.round(c.pct)}%`), bar);
+    }));
+  curve.setAttribute('aria-label', 'Star distribution');
 
-  const allRedFlags = Object.entries(data.analysis.all.redFlagSummary)
-    .sort((a, b) => b[1] - a[1])
-    .map(([keyword, count]) => `  - ${keyword}: ${count}`)
-    .join('\n');
+  return el('section', 'card',
+    el('div', 'eyebrow', 'Can you trust them'),
+    el('div', `verdict-word ${trust.tone}`, el('span', 'dot'), el('span', null, trust.word)),
+    el('div', 'verdict-cap', trust.caption.map(part => (part.em ? el('b', null, part.t) : part.t))),
+    curve,
+    el('div', 'curve-axis', trust.curve.map(c => el('span', null, `${c.star}★`, el('span', 'cnt-s', String(c.count))))),
+    trust.evidence.length ? el('div', 'evidence', trust.evidence.map(evidenceRow)) : null,
+  );
+}
 
-  const fiveStar = data.analysis.fiveStarClustering || {};
-  const oneStar = data.analysis.oneStarClustering || {};
-  const cv5Recent = fiveStar.recent?.cv || 0;
-  const cv5All = fiveStar.allTime?.cv || 0;
-  const cv1Recent = oneStar.recent?.cv || 0;
-  const cv1All = oneStar.allTime?.cv || 0;
+function evidenceRow(ev) {
+  const body = el('div', 'ev-body');
+  if (ev.grid) {
+    body.append(el('div', 'mini-grid',
+      ev.grid.map(g => el('span', 'h', `${g.star}★`)),
+      ev.grid.map(g => el('span', 'v', g.value)),
+      ev.grid.some(g => g.sub) ? ev.grid.map(g => el('span', 's', g.sub || '')) : null));
+  }
+  if (ev.rows) {
+    ev.rows.forEach(([label, value]) => body.append(el('div', 'row', el('span', null, label), el('span', 'mono', value))));
+  }
+  body.append(el('div', 'faint', ev.text));
 
-  // Per-star word counts
-  const wordCountByRating = data.analysis.all?.wordCountByRating || {};
-  const wordCountStr = [5, 4, 3, 2, 1]
-    .map(star => `${star}★: ${wordCountByRating[star]?.toFixed(1) || '-'}`)
-    .join(', ');
+  return el('details', 'ev',
+    el('summary', null,
+      el('span', 'ev-label', ev.label),
+      el('span', `ev-val ${ev.tone}`, ev.value),
+      el('span', 'car', '›'),
+      el('span', 'ev-note', ev.note)),
+    body);
+}
 
-  // Star distribution percentages
-  const distribution = data.stats.distribution;
-  const total = data.stats.totalReviews;
-  const distributionStr = [5, 4, 3, 2, 1]
-    .map(star => {
-      const count = distribution[star] || 0;
-      const percent = total > 0 ? (count / total * 100).toFixed(1) : 0;
-      return `${star}★: ${count} (${percent}%)`;
-    })
-    .join(', ');
+function flagChip([word, count]) {
+  return el('span', 'fl', word, el('span', 'fc', String(count)));
+}
 
-  return `${data.summary.name}
-${data.summary.address}
+function renderKeywords(keywords) {
+  const card = el('section', 'card',
+    el('div', 'eyebrow', 'What people mention'));
+  if (!keywords.length) {
+    card.append(el('div', 'empty', "Google didn't pick out any topics for this place."));
+    return card;
+  }
+  card.append(
+    el('div', 'cap', "Topics Google picked out of this place's reviews."),
+    el('div', 'kw-list', keywords.map(k => el('div', 'kw',
+      el('div', 'top', el('span', 'name', k.name), el('span', 'count', `(${k.count} reviews)`)),
+      el('div', 'vrow',
+        el('span', `verdict ${k.tone}`, el('span', 'mono', `${k.high}%`), ' rated ≥4★'),
+        k.one ? el('span', 'one', el('span', 'mono', `${k.one}%`), ' rated 1★') : null),
+      k.flags.length ? el('div', 'detail', 'Red flags:', k.flags.map(f => flagChip([f.flag, f.count]))) : null,
+    ))));
+  return card;
+}
 
-Total Reviews: ${data.stats.totalReviews}
-Average Rating: ${data.stats.averageRating.toFixed(1)} stars
-2-4 Star Reviews: ${data.analysis.middle.reviewCount} (${data.analysis.middle.percentageOfTotal}%)
-1 & 5 Star Reviews: ${data.analysis.extreme.reviewCount} (${data.analysis.extreme.percentageOfTotal}%)
-Extreme Reviews: ${(data.analysis.extreme.percentageOfTotal).toFixed(0)}%
+function renderRedFlags(rf) {
+  const card = el('section', 'card card-flags', el('div', 'eyebrow', 'Red flags'));
+  if (!rf) {
+    card.append(el('div', 'empty', 'No reviews rated ≤3★.'));
+    return card;
+  }
+  card.append(el('div', 'rf-story',
+    el('span', `mono ${rf.lowTone}`, `${rf.lowShare}%`), ' of reviews are ≤3★. ',
+    el('span', `mono ${rf.namedTone}`, `${rf.namedShare}%`),
+    rf.groups.length ? ' of those mention these red flags:' : ' of those mention a red flag.'));
+  if (rf.groups.length) {
+    card.append(el('div', 'rf-list', rf.groups.map(g => el('div', 'rf',
+      el('span', 'grp', g.name),
+      el('span', 'n', String(g.reviews)),
+      el('span', 'words', g.words.map(flagChip))))));
+  }
+  return card;
+}
 
-Star Distribution: ${distributionStr}
-
-Review Clustering (CV):
-  5★ Recent: ${cv5Recent.toFixed(2)}${cv5Recent > 1.0 ? ' [SUSPICIOUS]' : ''} | All: ${cv5All.toFixed(2)}
-  1★ Recent: ${cv1Recent.toFixed(2)}${cv1Recent > 1.0 ? ' [SUSPICIOUS]' : ''} | All: ${cv1All.toFixed(2)}
-
-Avg Word Count by Rating: ${wordCountStr}
-
-Red Flags (in 2-4 star reviews):
-${middleRedFlags || '  None detected'}
-
-Red Flags (all reviews):
-${allRedFlags || '  None detected'}
-
-${data.analysis.authenticityScores ? `Authenticity Analysis:
-  Curve Jaggedness: ${data.analysis.authenticityScores.curveJaggedness} ${parseFloat(data.analysis.authenticityScores.curveJaggedness) > 6 ? '(Manipulated)' : '(Natural)'}
-  Auth Score (1★): ${data.analysis.authenticityScores.auth1Star}
-  Auth Score (2★): ${data.analysis.authenticityScores.auth2Star} (Best indicator)
-  Auth Score (Combined): ${data.analysis.authenticityScores.authLowStar}
-${(() => {
-  const oneStarRatio = parseFloat(data.analysis.authenticityScores.oneStarPct) / parseFloat(data.analysis.authenticityScores.twoStarPct);
-  return oneStarRatio > 10 ? `  ⚠️ Possible fake 1-star campaign (${oneStarRatio.toFixed(1)}x ratio)\n` : '';
-})()}` : ''}
-Scraped: ${new Date(data.summary.scrapedAt).toLocaleString()}
-URL: ${data.summary.url}`;
+// Plain-text version of the results view, for pasting into notes.
+function formatSummary(view) {
+  const lines = [
+    view.name,
+    `${view.rating.toFixed(1)}★ · ${view.reviewCount} reviews`,
+    '',
+    `Can you trust them: ${view.trust.word}`,
+    view.trust.caption.map(p => p.t).join(''),
+  ];
+  if (view.keywords.length) {
+    lines.push('', 'What people mention:');
+    for (const k of view.keywords) {
+      const flags = k.flags.map(f => `${f.flag} ${f.count}`).join(', ');
+      lines.push(`  ${k.name} (${k.count} reviews): ${k.high}% rated ≥4★` +
+        (k.one ? `, ${k.one}% rated 1★` : '') + (flags ? `. Red flags: ${flags}` : ''));
+    }
+  }
+  if (view.redFlags) {
+    lines.push('', `Red flags: ${view.redFlags.lowShare}% of reviews are ≤3★. ${view.redFlags.namedShare}% of those mention a red flag.`);
+    for (const g of view.redFlags.groups) {
+      lines.push(`  ${g.name} (${g.reviews}): ${g.words.map(([w, n]) => `${w} ${n}`).join(', ')}`);
+    }
+  }
+  if (scrapedData?.url) lines.push('', scrapedData.url);
+  return lines.join('\n');
 }
 
 function setStatus(type, message) {
@@ -643,17 +401,7 @@ function setStatus(type, message) {
   statusEl.textContent = message;
 }
 
-// Bulk scrape functions
-function toggleBulkScrape() {
-  const isHidden = bulkScrapeContainer.hidden;
-  bulkScrapeContainer.hidden = !isHidden;
-  bulkScrapeToggle.textContent = isHidden ? 'Hide Bulk Scrape' : 'Bulk Scrape';
-
-  if (isHidden) {
-    // Hide results when showing bulk scrape UI
-    resultsEl.hidden = true;
-  }
-}
+// ---------- bulk scrape ----------
 
 function parseUrls(text) {
   return text
@@ -666,7 +414,7 @@ async function startBulkScrape() {
   const urls = parseUrls(bulkUrlsTextarea.value);
 
   if (urls.length === 0) {
-    setStatus('error', 'No valid Google Maps URLs found');
+    setStatus('error', 'No Google Maps place links found. Paste links that contain /maps/place/, one per line.');
     return;
   }
 
@@ -678,13 +426,11 @@ async function startBulkScrape() {
   startBulkBtn.disabled = true;
   bulkUrlsTextarea.disabled = true;
   scrapeBtn.disabled = true;
-  bulkScrapeToggle.disabled = true;
 
   // Show progress
   bulkProgressEl.hidden = false;
   updateBulkProgress();
 
-  // Start scraping
   await scrapeNextUrl();
 }
 
@@ -702,44 +448,29 @@ async function scrapeNextUrl() {
   bulkProgressText.textContent = `Scraping ${current}/${total}: ${extractLocationName(url)}`;
 
   try {
-    // Navigate to URL
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
     await browser.tabs.update(tabs[0].id, { url });
-
-    // Wait for page to load
     await sleep(1000);
-
-    // Trigger scrape
     await triggerScrape();
-
   } catch (error) {
     console.error(`[Bulk Scrape] Failed to scrape ${url}:`, error);
     setStatus('error', `Failed: ${error.message}`);
-    await sleep(500); // Brief pause before continuing
+    await sleep(500);
   }
 
-  // Move to next
   bulkScrapeIndex++;
   updateBulkProgress();
 
-  // Small delay between scrapes
   await sleep(250);
   await scrapeNextUrl();
 }
 
 function triggerScrape() {
   return new Promise((resolve, reject) => {
-    const options = {
-      sortOrder: sortOrderSelect.value,
-      maxReviews: parseInt(maxReviewsSelect.value)
-    };
-
-    // Send scrape command
     browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
-      browser.tabs.sendMessage(tabs[0].id, { action: 'scrape', options });
+      browser.tabs.sendMessage(tabs[0].id, { action: 'scrape', options: scrapeOptions() });
     });
 
-    // Wait for completion
     const listener = (message) => {
       if (message.action === 'scrapeComplete') {
         browser.runtime.onMessage.removeListener(listener);
@@ -749,7 +480,6 @@ function triggerScrape() {
         reject(new Error(message.error));
       }
     };
-
     browser.runtime.onMessage.addListener(listener);
 
     // Timeout after 5 minutes
@@ -768,18 +498,13 @@ function updateBulkProgress() {
 function finishBulkScrape() {
   isBulkScraping = false;
 
-  setStatus('complete', `Bulk scrape complete! Scraped ${bulkScrapeQueue.length} locations`);
+  setStatus('complete', `Bulk scrape complete. Scraped ${bulkScrapeQueue.length} places.`);
 
-  // Re-enable controls
   startBulkBtn.disabled = false;
   bulkUrlsTextarea.disabled = false;
   scrapeBtn.disabled = false;
-  bulkScrapeToggle.disabled = false;
-
-  // Clear textarea
   bulkUrlsTextarea.value = '';
 
-  // Hide progress after delay
   setTimeout(() => {
     bulkProgressEl.hidden = true;
     bulkProgressBar.style.width = '0%';
@@ -789,7 +514,7 @@ function finishBulkScrape() {
 function cancelBulkScrape() {
   isBulkScraping = false;
   finishBulkScrape();
-  setStatus('ready', 'Bulk scrape cancelled');
+  setStatus('ready', 'Bulk scrape cancelled.');
 }
 
 function extractLocationName(url) {

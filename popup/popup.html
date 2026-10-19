@@ -1,115 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Momus - Google Maps Review Analyzer</h1>
-
-    <div id="status" class="status ready">Ready</div>
-
-    <div class="scrape-options">
-      <div class="option-row">
-        <label for="sortOrder">Sort by:</label>
-        <select id="sortOrder">
-          <option value="relevant">Most Relevant</option>
-          <option value="newest">Newest</option>
-          <option value="highest">Highest Rating</option>
-          <option value="lowest">Lowest Rating</option>
-        </select>
+  <div class="frame">
+    <header class="topbar">
+      <div class="place" id="place" hidden>
+        <div class="place-name" id="placeName"></div>
+        <div class="place-sub"><span class="mono" id="placeRating"></span> · <span class="mono" id="placeCount"></span> reviews</div>
       </div>
-      <div class="option-row">
-        <label for="maxReviews">Max reviews:</label>
-        <select id="maxReviews">
-          <option value="100">100</option>
-          <option value="200">200</option>
-          <option value="300">300</option>
-          <option value="500" selected>500</option>
-          <option value="0">All (slow)</option>
-        </select>
-      </div>
-    </div>
+      <div class="brand" id="brand">Momus</div>
+      <button id="viewToggle" class="btn btn-sm" hidden>New scrape</button>
+    </header>
 
-    <button id="scrapeBtn" class="btn btn-primary">Scrape Reviews</button>
-    <button id="bulkScrapeToggle" class="btn btn-secondary">Bulk Scrape</button>
-
-    <div id="bulkScrapeContainer" class="bulk-scrape" hidden>
-      <h3>Bulk Scrape URLs</h3>
-      <textarea id="bulkUrls" placeholder="Paste Google Maps URLs (one per line)&#10;https://www.google.com/maps/place/...&#10;https://www.google.com/maps/place/..."></textarea>
-      <div class="bulk-controls">
-        <button id="startBulkBtn" class="btn btn-primary">Start Bulk Scrape</button>
-        <button id="cancelBulkBtn" class="btn btn-secondary">Cancel</button>
-      </div>
-      <div id="bulkProgress" class="bulk-progress" hidden>
-        <div class="progress-text" id="bulkProgressText">Scraping 0/0...</div>
-        <div class="progress-bar">
-          <div id="bulkProgressBar" class="progress-fill"></div>
+    <main class="body" id="scrapeView" hidden>
+      <section class="card">
+        <div class="eyebrow">Scrape this place</div>
+        <div class="cap">Open an apartment on Google Maps, then read its reviews.</div>
+        <div class="option-row">
+          <label for="maxReviews">Reviews to read</label>
+          <select id="maxReviews">
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="500" selected>500</option>
+            <option value="0">All (slow)</option>
+          </select>
         </div>
-      </div>
-    </div>
-
-    <div id="results" class="results" hidden>
-      <h2>Analysis Results</h2>
-      <div id="insightsContainer" class="insights">
-        <!-- 1. Star Distribution -->
-        <h3 id="starDistHeader">Star Distribution:</h3>
-        <div id="starDistribution" class="star-dist-bars"></div>
-
-        <!-- 2. Review Clustering -->
-        <h3>Review Clustering:</h3>
-        <div class="section-explanation">
-          Higher values = more reviews clustered on similar dates (suspicious).
+        <div class="option-row">
+          <label for="sortOrder">Order</label>
+          <select id="sortOrder">
+            <option value="relevant">Most relevant</option>
+            <option value="newest">Newest</option>
+            <option value="highest">Highest rating</option>
+            <option value="lowest">Lowest rating</option>
+          </select>
         </div>
-        <div class="clustering-grid">
-          <div class="cluster-header"></div>
-          <div class="cluster-header">Recent</div>
-          <div class="cluster-header">All Time</div>
-          <div class="cluster-label">5★</div>
-          <div class="cluster-value" id="cluster5Recent">-</div>
-          <div class="cluster-value" id="cluster5All">-</div>
-          <div class="cluster-label">1★</div>
-          <div class="cluster-value" id="cluster1Recent">-</div>
-          <div class="cluster-value" id="cluster1All">-</div>
+        <div id="status" class="status">Ready</div>
+        <button id="scrapeBtn" class="btn btn-primary btn-wide">Scrape reviews</button>
+      </section>
+
+      <section class="card">
+        <div class="eyebrow">Bulk scrape</div>
+        <div class="cap">Paste Google Maps place links, one per line. Each is saved as its own JSON file.</div>
+        <textarea id="bulkUrls" placeholder="https://www.google.com/maps/place/..."></textarea>
+        <div class="bulk-controls">
+          <button id="startBulkBtn" class="btn btn-sm">Start</button>
+          <button id="cancelBulkBtn" class="btn btn-sm">Cancel</button>
         </div>
-
-        <!-- 3. Word Counts -->
-        <h3>Word Count by Rating (vs overall agv):</h3>
-        <div class="word-count-grid" id="wordCountGrid">
-          <div class="word-stat"><span class="star-label">5★</span><span id="words5">-</span></div>
-          <div class="word-stat"><span class="star-label">4★</span><span id="words4">-</span></div>
-          <div class="word-stat"><span class="star-label">3★</span><span id="words3">-</span></div>
-          <div class="word-stat"><span class="star-label">2★</span><span id="words2">-</span></div>
-          <div class="word-stat"><span class="star-label">1★</span><span id="words1">-</span></div>
+        <div id="bulkProgress" class="bulk-progress" hidden>
+          <div class="progress-text" id="bulkProgressText">Scraping 0/0...</div>
+          <div class="progress-bar"><div id="bulkProgressBar" class="progress-fill"></div></div>
         </div>
+      </section>
+    </main>
 
-        <!-- 4. Authenticity Analysis -->
-        <div id="authenticityScores" class="authenticity-section" hidden>
-          <h3>Authenticity Analysis (higher is better):</h3>
-          <div id="authenticityContent"></div>
-        </div>
-      </div>
+    <main class="body" id="resultsView" hidden></main>
 
-      <!-- 5. Google Keywords -->
-      <div id="googleKeywordContainer" class="google-keywords" hidden>
-        <h3 id="googleKeywordHeader">Google Keywords:</h3>
-        <div id="googleKeywordList"></div>
-      </div>
-
-      <!-- 6. Red Flags -->
-      <div id="redFlagsContainer" class="red-flags">
-        <h3 id="redFlagsHeader">Red Flags:</h3>
-        <div id="redFlagsList"></div>
-      </div>
-    </div>
-
-    <div class="button-group">
-      <button id="downloadBtn" class="btn btn-secondary" disabled>Download as JSON</button>
-      <button id="copyBtn" class="btn btn-secondary" disabled>Copy Summary</button>
-    </div>
+    <footer class="footer" id="footer" hidden>
+      <button id="copyBtn" class="btn btn-sm">Copy summary</button>
+      <button id="downloadBtn" class="btn btn-sm">Download JSON</button>
+    </footer>
   </div>
 
+  <script src="../lib/browser.js"></script>
+  <script src="../content/keywords.js"></script>
+  <script src="summarize.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
