@@ -49,7 +49,7 @@ fi
 # The single list of things the extension does NOT ship. Both browser builds
 # read from this, so the two packages cannot drift apart. In run mode it also
 # keeps edits to these paths from triggering a reload.
-EXCLUDES=(build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/ designs/ images/ features/ laws/ plans/)
+EXCLUDES=(build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/ designs/ images/ features/ laws/ plans/ AGENTS.md)
 
 if [ "$MODE" = "firefox" ] || [ "$MODE" = "chrome" ]; then
     TARGET=firefox-desktop
