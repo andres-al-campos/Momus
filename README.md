@@ -298,6 +298,7 @@ momus/
 │   ├── setup-dev.sh        # Python dev-env setup (uv)
 │   └── requirements.txt
 ├── docs/                   # Guides and notes
+├── laws/                   # Checks for rules a bug once broke
 ├── build.sh                # Build the extension package
 └── release.sh              # Cut a GitHub release
 ```
@@ -308,6 +309,8 @@ momus/
    Google Maps with the extension loaded, in a fresh temporary profile.
 2. Modify the relevant files; the extension reloads itself on save
 3. Test on a Google Maps location page
+4. Run `./build.sh check` before committing; each failing law says what broke
+   and how to fix it
 
 ### Debugging
 
