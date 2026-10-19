@@ -36,6 +36,8 @@ harness could run every file in `reviews/` through it.
   and texting (lol, dont, alot, wifi) still counts as a spelling error.
 - Every scrape before 2026-10-18 shows 0 spelling errors: Typo.js was injected
   as a page `<script>`, which the content script can't see, and the fallback
-  passed every word. It now loads as a content script; the fix hasn't been
-  confirmed in a live browser yet. Old files in `reviews/` keep their zeros
+  passed every word. It now loads as a content script. Confirmed live in
+  Chromium on 2026-10-19 ("[Content] Dictionary loaded successfully"); a full
+  scrape wasn't, because Google serves headless, signed-out browsers a
+  "limited view" with no reviews. Old files in `reviews/` keep their zeros
   until rescraped.
