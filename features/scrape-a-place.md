@@ -13,8 +13,9 @@ in the browser. Everything else in Momus starts from the data this produces.
 ## How to get to it
 
 1. Open a place on Google Maps (the URL contains `/maps/place/`).
-2. Click the Momus toolbar icon, pick sort and max reviews.
-3. Click Scrape Reviews and wait (30–60 s for a few hundred reviews).
+2. Click the Momus toolbar icon. If it opens on results, click New scrape.
+3. Pick the order and how many reviews to read.
+4. Click Scrape reviews and wait (30–60 s for a few hundred reviews).
 
 ## Driving it
 

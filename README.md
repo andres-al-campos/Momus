@@ -62,17 +62,15 @@ Then, to install the package in Firefox:
 
 1. Navigate to a Google Maps location page (e.g., an apartment complex)
 2. Make sure you're on the place page (URL should contain `/maps/place/`)
-3. Click the extension icon in your toolbar
-4. Click "Scrape Reviews"
+3. Click the extension icon in your toolbar. It opens on your last scrape; click "New scrape" for the scrape view
+4. Click "Scrape reviews"
 5. Wait for the scraping to complete (may take 30-60 seconds for locations with many reviews)
-6. Review the statistics:
-   - **Total Reviews**: Number of reviews scanned
-   - **Average Rating**: Overall star rating
-   - **2-4 Star Reviews**: Count of "middle" reviews (most informative)
-   - **Suspicion Score**: 0-1 scale, higher = more suspicious distribution (0.8+ is very suspicious)
-   - **Red Flags**: Keywords found and their counts
-7. Click "Download as JSON" to save the full data
-8. Click "Copy Summary" to get a quick text summary for pasting
+6. Read the three cards:
+   - **Can you trust them**: a verdict, the star curve, and the evidence behind it. Open a row to see what it measures
+   - **What people mention**: Google's keywords, with the share of their reviews rated ≥4★ and 1★
+   - **Red flags**: how many reviews are ≤3★, and what problems those name, grouped by kind
+7. Click "Download JSON" to save the full data
+8. Click "Copy summary" to get a quick text summary for pasting
 
 ## Understanding the Output
 

@@ -12,8 +12,8 @@ ready for Compare locations.
 
 ## How to get to it
 
-1. Click the Momus toolbar icon, then Bulk Scrape.
-2. Paste place URLs, click Start Bulk Scrape.
+1. Click the Momus toolbar icon, then New scrape if it opens on results.
+2. Paste place URLs into the Bulk scrape card, click Start.
 
 ## Driving it
 
