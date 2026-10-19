@@ -8,7 +8,7 @@ again.
 |---|---|---|
 | Scrape a place | [scrape-a-place.md](scrape-a-place.md) | Blocked: live Google Maps |
 | Bulk scrape | [bulk-scrape.md](bulk-scrape.md) | Blocked: live Google Maps |
-| Read the analysis | [analysis.md](analysis.md) | Not yet: needs a Node harness |
+| Read the analysis | [analysis.md](analysis.md) | Partly: spell checker, via `./build.sh check` |
 | Export | [export.md](export.md) | Blocked: browser downloads and clipboard |
 | Compare locations | [compare-locations.md](compare-locations.md) | Yes |
 

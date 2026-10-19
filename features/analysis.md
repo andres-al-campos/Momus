@@ -23,13 +23,18 @@ last scrape again.
 
 Preconditions: a saved scrape in `reviews/`.
 
-Not yet driveable headless. The analysis functions in `content/content.js` are
-pure, but the file registers a browser message listener on load, so Node can't
-import it as is. A harness that loads them and runs every file in `reviews/`
-would make this feature checkable without Google.
+Partly driveable headless. `./build.sh check` loads the content scripts the
+way the browser does and checks that the spell checker catches misspellings
+(✓ `spellcheck-loads`). The rest of the analysis isn't checked yet; the same
+harness could run every file in `reviews/` through it.
 
 ## Gotchas
 
 - `scripts/reprocess.js` keeps its own copy of the analysis helpers; a change
   here has to be made there too, or the two drift apart.
 - Proper nouns and slang count as spelling errors.
+- Every scrape before 2026-10-18 shows 0 spelling errors: Typo.js was injected
+  as a page `<script>`, which the content script can't see, and the fallback
+  passed every word. It now loads as a content script; the fix hasn't been
+  confirmed in a live browser yet. Old files in `reviews/` keep their zeros
+  until rescraped.

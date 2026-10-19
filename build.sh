@@ -5,6 +5,7 @@
 #                         it reloads itself whenever a source file changes.
 #   ./build.sh chrome     Same, in Chrome.
 #   ./build.sh package    Build the Firefox and Chrome zips into artifacts/.
+#   ./build.sh check      Run every law in laws/ (rules a bug once broke).
 #
 # Uses the project-local web-ext (a devDependency) via npx, so the build is
 # identical on every machine regardless of what's installed globally.
@@ -17,13 +18,23 @@ cd "$(dirname "$0")"
 
 MODE="${1:-firefox}"
 case "$MODE" in
-    firefox|chrome|package) ;;
+    firefox|chrome|package|check) ;;
     *)
         echo "❌ Unknown option '$MODE'."
-        echo "   Use: ./build.sh (Firefox), ./build.sh chrome, or ./build.sh package"
+        echo "   Use: ./build.sh (Firefox), ./build.sh chrome, ./build.sh package, or ./build.sh check"
         exit 1
         ;;
 esac
+
+if [ "$MODE" = "check" ]; then
+    failed=0
+    for law in laws/*.mjs; do
+        node "$law" || failed=1
+    done
+    [ "$failed" = 0 ] || { echo "❌ A law failed. Each message above says what broke and how to fix it."; exit 1; }
+    echo "✅ All laws hold."
+    exit 0
+fi
 
 # web-ext is a devDependency; make sure node_modules is present before building.
 if [ ! -x "node_modules/.bin/web-ext" ]; then
@@ -38,7 +49,7 @@ fi
 # The single list of things the extension does NOT ship. Both browser builds
 # read from this, so the two packages cannot drift apart. In run mode it also
 # keeps edits to these paths from triggering a reload.
-EXCLUDES=(build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/ designs/ images/ features/)
+EXCLUDES=(build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/ designs/ images/ features/ laws/ plans/)
 
 if [ "$MODE" = "firefox" ] || [ "$MODE" = "chrome" ]; then
     TARGET=firefox-desktop
