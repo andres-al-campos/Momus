@@ -31,7 +31,7 @@
   "content_scripts": [
     {
       "matches": ["*://www.google.com/maps/*"],
-      "js": ["content/keywords.js", "content/scraper.js", "content/content.js"]
+      "js": ["lib/typo.js", "content/keywords.js", "content/scraper.js", "content/content.js"]
     }
   ],
   "icons": {
@@ -40,7 +40,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["lib/typo.js", "dictionaries/*"],
+      "resources": ["dictionaries/*"],
       "matches": ["*://www.google.com/*"]
     }
   ]

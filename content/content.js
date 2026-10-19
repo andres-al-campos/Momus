@@ -21,22 +21,18 @@ async function initDictionary() {
       fetch(affUrl).then(r => r.text())
     ]);
 
-    // Load Typo.js library
-    const typoScript = document.createElement('script');
-    typoScript.src = browser.runtime.getURL('lib/typo.js');
-    await new Promise((resolve, reject) => {
-      typoScript.onload = resolve;
-      typoScript.onerror = reject;
-      document.head.appendChild(typoScript);
-    });
-
-    // Initialize Typo dictionary
+    // Typo comes from lib/typo.js, loaded as a content script by the manifest.
+    // Injecting it as a <script> tag runs it in the page's world, where this
+    // isolated content script can't see `Typo`; every review then scored 0
+    // spelling errors without anyone noticing.
     dictionary = new Typo('en_US', affData, dicData);
     console.log('[Content] Dictionary loaded successfully');
 
     return dictionary;
   } catch (error) {
-    console.error('[Content] Error loading dictionary:', error);
+    console.error('[Content] Spell checker failed to load, so every review will show 0 spelling errors. ' +
+      'Check that manifest.json lists lib/typo.js in content_scripts before content/content.js, ' +
+      'and that dictionaries/* is in web_accessible_resources.', error);
     // Return a stub that always returns 0 errors
     return {
       check: () => true

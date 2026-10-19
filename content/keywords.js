@@ -1,6 +1,6 @@
 // Chrome exposes `chrome`, Firefox exposes `browser`. Content scripts share one
-// scope, so this alias is declared here only - keywords.js loads first - and is
-// visible to scraper.js and content.js.
+// scope, so this alias is declared here only - keywords.js loads before the
+// other Momus scripts - and is visible to scraper.js and content.js.
 const browser = globalThis.browser ?? globalThis.chrome;
 
 // Red flag keywords for apartment reviews
