@@ -32,6 +32,11 @@ Look-and-feel calls, with the owner's why.
   the topic. One colour per row, because colouring each number made each
   colour look like it meant something different.
 
+- **Each section tells a story, in reading order** (2026-10-18). Red flags:
+  "29% of reviews are ≤3★. 62% of those mention these red flags:" then the
+  flags grouped by kind. Shares carry the story; raw "x of y" counts are
+  secondary and can go.
+
 ## Feature map
 
 `features/` lists what a user can do and how to drive it. Read its README
