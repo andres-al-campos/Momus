@@ -48,7 +48,23 @@ Look-and-feel calls, with the owner's why.
   management, noise, move-out), sorted by how many low reviews mention each.
   The card's ground, border and word chips are coral, the one card off the
   shared ground, because the old pink-tinted card was missed; group labels
-  stay plain so each group reads as its own block.
+  stay plain so each group reads as its own block. Red-flag words use the
+  shared red, not a lighter coral, which read as orange.
+- **The header is the place's name, then "3.8★ · 364 reviews" at a readable
+  size** (2026-10-19). The rating is coloured: green from 4.3★, red under
+  3.8★ (16 saved places average 4.1). Sort order isn't shown: most scrapes
+  read every review, so it rarely matters.
+- **Explanations live in the opened evidence row, not tooltips**
+  (2026-10-19). Opening the row is the reader asking; a tooltip would add a
+  hover nobody finds. Tooltips only go on things that don't open.
+- **Typos are evidence, counted per word** (2026-10-19). A "5★ typos" row
+  shows the share of words misspelled by rating; per review, long reviews
+  look worse just for being long. Typos don't feed the verdict: no study
+  found them to separate fake from real reviews.
+- **One border grey, the buttons'** (2026-10-19), so cards don't blend into
+  each other. The red-flags card keeps its coral edge.
+- **Star bars are thin and close together, and ★ is a real star glyph**
+  (2026-10-19). IBM Plex has no ★, and the fallback looked like an asterisk.
 
 ## Feature map
 
