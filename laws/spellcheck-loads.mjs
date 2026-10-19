@@ -53,14 +53,25 @@ for (const file of scripts) {
   vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: file });
 }
 
-const result = await vm.runInContext(`(async () => {
-  const dict = await initDictionary();
-  return countSpellingErrors('The aparment managment would not recieve my rent', dict);
-})()`, context);
+const count = (text) => vm.runInContext(`(async () =>
+  countSpellingErrors(${JSON.stringify(text)}, await initDictionary()))()`, context);
 
+const typos = 'The aparment managment would not recieve my rent';
+const result = await count(typos);
 if (result !== 3) {
-  fail(`expected 3 spelling errors in "The aparment managment would not recieve my rent", got ${result}. ` +
+  fail(`expected 3 spelling errors in "${typos}", got ${result}. ` +
     'The spell checker is not loading in the content scripts. List lib/typo.js in manifest.json ' +
     'content_scripts before content/content.js, and construct Typo directly instead of injecting a <script> tag.');
 }
-console.log('✓ spellcheck-loads: content scripts catch 3 of 3 misspellings');
+
+// Words that once counted as typos: lowercased contractions, curly
+// apostrophes from phones, and staff names, which made 5★ reviews look
+// twice as misspelled as 1★ ones.
+const clean = "I've lived here since May and I didn’t regret it. Charlyce and Ronya at Greystar were great.";
+const falsePositives = await count(clean);
+if (falsePositives !== 0) {
+  fail(`expected 0 spelling errors in "${clean}", got ${falsePositives}. ` +
+    'countSpellingErrors in content/scraper.js must keep each word\'s case, turn curly apostrophes into straight ones, ' +
+    'and skip capitalised words the dictionary doesn\'t know (names).');
+}
+console.log('✓ spellcheck-loads: content scripts catch 3 of 3 misspellings and pass names and contractions');

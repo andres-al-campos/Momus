@@ -322,21 +322,18 @@ function parseAllReviews() {
 function countSpellingErrors(text, dictionary) {
   if (!dictionary || !text) return 0;
 
-  // Clean text: remove punctuation, split into words
+  // Keep case: the dictionary knows "I've" and "Austin" but not "i've".
+  // Phones type curly apostrophes, which would split "didn’t" into "didn".
   const words = text
-    .toLowerCase()
-    .replace(/[^a-z\s']/g, ' ')
+    .replace(/[‘’]/g, "'")
+    .replace(/[^\p{L}\s']/gu, ' ')
     .split(/\s+/)
+    .map(w => w.replace(/^'+|'+$/g, ''))
     .filter(w => w.length > 2); // Ignore very short words
 
-  let errors = 0;
-  words.forEach(word => {
-    if (!dictionary.check(word)) {
-      errors++;
-    }
-  });
-
-  return errors;
+  // A capitalised word the dictionary doesn't know is almost always a name
+  // (staff, the complex, the street), and 5★ reviews thank staff by name.
+  return words.filter(w => !dictionary.check(w) && !/^\p{Lu}/u.test(w)).length;
 }
 
 /**

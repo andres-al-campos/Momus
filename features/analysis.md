@@ -32,7 +32,8 @@ harness could run every file in `reviews/` through it.
 
 - `scripts/reprocess.js` keeps its own copy of the analysis helpers; a change
   here has to be made there too, or the two drift apart.
-- Proper nouns and slang count as spelling errors.
+- Capitalised words the dictionary doesn't know are skipped as names; slang
+  and texting (lol, dont, alot, wifi) still counts as a spelling error.
 - Every scrape before 2026-10-18 shows 0 spelling errors: Typo.js was injected
   as a page `<script>`, which the content script can't see, and the fallback
   passed every word. It now loads as a content script; the fix hasn't been
