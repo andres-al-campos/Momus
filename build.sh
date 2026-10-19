@@ -68,8 +68,18 @@ fi
 
 VERSION=$(jq -r .version manifest.json 2>/dev/null || echo "dev")
 
+# Archive any previously-built zips into old_versions/ so artifacts/
+# only ever holds the build we're about to make.
+echo "🗄  Archiving previous builds to old_versions/..."
+mkdir -p artifacts/old_versions
+shopt -s nullglob
+for zip in artifacts/*.zip; do
+    mv "$zip" artifacts/old_versions/
+    echo "   moved $(basename "$zip")"
+done
+shopt -u nullglob
+
 echo "📦 Building with web-ext..."
-mkdir -p artifacts
 
 # One MV3 manifest serves both browsers: Firefox honours browser_specific_settings,
 # Chrome ignores it. So the two zips have identical contents and differ in name only.
