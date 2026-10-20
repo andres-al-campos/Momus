@@ -1,6 +1,6 @@
 {
   "name": "momus",
-  "version": "1.17.1",
+  "version": "1.18.0",
   "description": "Momus — a Firefox extension that scrapes and analyzes Google Maps reviews, flags fake-review patterns and red flags, and ranks locations side by side. Built for apartment hunting and location research.",
   "license": "AGPL-3.0-only",
   "private": true,
