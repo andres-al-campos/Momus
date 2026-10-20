@@ -5,9 +5,10 @@ A Firefox and Chrome extension that scrapes and analyzes Google Maps reviews for
 ## Features
 
 - **Complete Review Scraping**: Automatically scrolls and loads all reviews from a Google Maps location page
-- **Fake Review Detection**: Calculates a "suspicion score" based on bimodal distribution (lots of 5-star and 1-star, few middle reviews)
+- **Can you trust them**: A verdict on whether the reviews look genuine, from how smooth the star curve is, how short the 5★ reviews are, and whether they arrived in bursts. Each piece of evidence opens to say what it measures
+- **What people mention**: Google's keywords for the place, with the share of their reviews rated ≥4★ and 1★
 - **Spelling Error Analysis**: Uses Typo.js to count spelling errors in reviews by rating. Evidence only: typos alone don't tell fake reviews from real ones, but one rating far cleaner than the rest is unusual
-- **Red Flag Detection**: Automatically flags reviews mentioning pests, mold, crime, management issues, noise, and other problems
+- **Red Flags**: How many reviews are ≤3★, and what problems those name (pests, leaks and mold, crime, management, noise, move-out), grouped by kind
 - **Bulk Scrape**: Paste several place URLs and the extension scrapes each in turn, downloading a JSON file per location
 - **JSON Export**: Download the complete data as JSON
 - **Summary Copy**: Quick copy-paste summary of key stats for easy comparison
@@ -76,7 +77,7 @@ Then, to install the package in Firefox:
 
 ### Suspicion Score
 
-The suspicion score indicates how "bimodal" the review distribution is:
+The popup doesn't show this score; it's in the JSON and feeds `scripts/analyze.js`. It indicates how "bimodal" the review distribution is:
 - **0.0-0.3**: Natural distribution with plenty of middle reviews
 - **0.4-0.7**: Somewhat suspicious, worth investigating
 - **0.8-1.0**: Highly suspicious - very few middle reviews suggests potential fake review padding
@@ -277,14 +278,16 @@ momus/
 ├── background.js           # Background script
 ├── popup/                  # Extension popup UI
 │   ├── popup.html
-│   ├── popup.js
+│   ├── popup.js            # Builds the cards' DOM
+│   ├── summarize.js        # A scrape's numbers, colours and sentences
 │   └── popup.css
 ├── content/                # Scripts that run on Google Maps
 │   ├── content.js          # Main orchestrator
 │   ├── scraper.js          # DOM parsing logic
 │   └── keywords.js         # Red flag keyword list
-├── lib/                    # Third-party libraries
-│   └── typo.js
+├── lib/
+│   ├── browser.js          # browser/chrome alias, shared by popup and content scripts
+│   └── typo.js             # Third-party spell checker
 ├── dictionaries/           # Spell check dictionaries
 │   ├── en_US.dic
 │   └── en_US.aff
