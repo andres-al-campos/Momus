@@ -3,14 +3,14 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg:            #000000;
-  --bg-raise:      #121418;
-  --bg-input:      #1b1e24;
-  --bg-hover:      #252931;
+  --bg:            #0d0e11;
+  --bg-raise:      #17191e;
+  --bg-input:      #20232a;
+  --bg-hover:      #2a2e36;
   --line:          rgba(255,255,255,0.18);   /* one grey for every border, the buttons' */
   --text:          #eef1f5;
-  --text-dim:      #9aa1ac;
-  --text-faint:    #868e9a;   /* 5:1 on cards; the old #5d646f was 2.9 */
+  --text-dim:      #c4c9d1;
+  --text-faint:    #9aa1ac;   /* 6.8:1 on cards; WebTime's #5d646f was 2.9 */
   --accent:        #3567d6;   /* white text at 5:1; WebTime's #4f86f7 was 3.5 */
   --good:          #3fbf7f;
   --warn:          #f0a52a;   /* amber: in between */
