@@ -101,8 +101,6 @@ body {
   min-height: 0;
   overflow-y: auto;
   scrollbar-gutter: stable both-edges;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.22) transparent;
   padding: var(--gap) var(--body-pad);
   display: flex;
   flex-direction: column;
