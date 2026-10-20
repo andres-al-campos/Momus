@@ -3,15 +3,15 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg:            #101216;
-  --bg-raise:      #181b21;
-  --bg-input:      #1f232b;
-  --bg-hover:      #262b34;
+  --bg:            #000000;
+  --bg-raise:      #121418;
+  --bg-input:      #1b1e24;
+  --bg-hover:      #252931;
   --line:          rgba(255,255,255,0.18);   /* one grey for every border, the buttons' */
   --text:          #eef1f5;
   --text-dim:      #9aa1ac;
-  --text-faint:    #5d646f;
-  --accent:        #4f86f7;
+  --text-faint:    #868e9a;   /* 5:1 on cards; the old #5d646f was 2.9 */
+  --accent:        #3567d6;   /* white text at 5:1; WebTime's #4f86f7 was 3.5 */
   --good:          #3fbf7f;
   --warn:          #f0a52a;   /* amber: in between */
   --bad:           #ff8a80;   /* WebTime's coral error text */
@@ -23,13 +23,14 @@
   --flag-chip:     rgba(255,138,128,0.12);
   --flag-count:    rgba(255,138,128,0.22);
 
-  --topbar-h:          58px;
+  --topbar-h:          72px;
   --control-h:         38px;
   --control-h-sm:      30px;
   --radius-control:    9px;
   --radius-control-sm: 8px;
   --radius-card:       12px;
   --body-pad:          16px;
+  --scrollbar-w:       9px;   /* reserved on both sides, so content stays centred */
   --seam-pad:          15px;
   --gap:               12px;
   --title-gap:         9px;
@@ -67,7 +68,7 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 0 var(--body-pad);
+  padding: 6px calc(var(--body-pad) + var(--scrollbar-w)) 0;
   border-bottom: 1px solid var(--line);
 }
 .place { min-width: 0; }
@@ -92,26 +93,29 @@ body {
 .btn:disabled { opacity: 0.45; cursor: default; }
 .btn-sm { height: var(--control-h-sm); border-radius: var(--radius-control-sm); padding: 0 11px; }
 .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-.btn-primary:hover:not(:disabled) { background: #3f74e0; }
+.btn-primary:hover:not(:disabled) { background: #2f5fcc; }
 .btn-wide { width: 100%; margin-top: 12px; }
 
 .body {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.22) transparent;
   padding: var(--gap) var(--body-pad);
   display: flex;
   flex-direction: column;
   gap: var(--gap);
 }
-.body::-webkit-scrollbar { width: 9px; }
+.body::-webkit-scrollbar { width: var(--scrollbar-w); }
 .body::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 5px; }
 .body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 5px; }
 
 .footer {
   flex: none;
   display: flex; gap: 8px; justify-content: flex-end;
-  padding: 10px var(--body-pad);
+  padding: 10px calc(var(--body-pad) + var(--scrollbar-w));
   border-top: 1px solid var(--line);
 }
 
@@ -130,7 +134,7 @@ body {
   color: var(--text);
   margin-bottom: var(--title-gap);
 }
-.cap { font-size: 11.5px; color: var(--text-dim); line-height: 1.45; margin: -3px 0 10px; }
+.cap { font-size: 12px; color: var(--text-dim); line-height: 1.45; margin: -3px 0 10px; }
 .empty { font-size: 12.5px; color: var(--text-dim); }
 
 /* ---------- scrape view ---------- */
@@ -172,16 +176,16 @@ textarea::placeholder { color: var(--text-faint); }
   max-width: 230px;
 }
 .curve .col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 3px; }
-.curve .pct { font: 500 10.5px 'IBM Plex Mono', monospace; color: var(--text-dim); }
+.curve .pct { font: 500 11.5px 'IBM Plex Mono', monospace; color: var(--text-dim); }
 .curve .b { width: 28px; background: linear-gradient(var(--bar-top), var(--bar-bottom)); border-radius: 3px 3px 0 0; min-height: 2px; }
 .curve-axis {
   max-width: 230px; margin: 0 auto;
   display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
   border-top: 1px solid var(--line);
   padding-top: 4px;
-  font: 500 10.5px 'IBM Plex Mono', monospace; color: var(--text-faint); text-align: center;
+  font: 500 11.5px 'IBM Plex Mono', monospace; color: var(--text-faint); text-align: center;
 }
-.cnt-s { display: block; color: var(--text-faint); font-weight: 400; font-size: 10px; }
+.cnt-s { display: block; color: var(--text-faint); font-weight: 400; font-size: 11px; }
 
 .evidence { margin: 12px calc(-1 * var(--seam-pad)) -13px; }
 .ev { border-top: 1px solid var(--line); }
@@ -190,7 +194,7 @@ textarea::placeholder { color: var(--text-faint); }
 .ev-label { font-size: 12px; color: var(--text-dim); }
 .ev summary:hover .ev-label { color: var(--text); }
 .ev-val { font: 600 14px 'IBM Plex Mono', monospace; text-align: right; }
-.ev-note { grid-column: 1 / -1; font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+.ev-note { grid-column: 1 / -1; font-size: 12px; color: var(--text-faint); margin-top: 2px; }
 .ev .car { color: var(--text-faint); font-size: 11px; text-align: center; transition: transform 160ms cubic-bezier(0.4,0,0.2,1); }
 .ev[open] .car { transform: rotate(90deg); }
 .ev-body { padding: 0 var(--seam-pad) 11px; font-size: 11.5px; color: var(--text-dim); line-height: 1.45; }
@@ -199,9 +203,9 @@ textarea::placeholder { color: var(--text-faint); }
 .ev-body .faint { color: var(--text-faint); margin-top: 6px; }
 .ev-body > .faint:first-child { margin-top: 0; }
 .mini-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; text-align: center; }
-.mini-grid .h { font: 500 10.5px 'IBM Plex Mono', monospace; color: var(--text-faint); }
+.mini-grid .h { font: 500 11.5px 'IBM Plex Mono', monospace; color: var(--text-faint); }
 .mini-grid .v { font: 600 13px 'IBM Plex Mono', monospace; color: var(--text); }
-.mini-grid .s { font: 400 10.5px 'IBM Plex Mono', monospace; color: var(--text-faint); }
+.mini-grid .s { font: 400 11.5px 'IBM Plex Mono', monospace; color: var(--text-faint); }
 
 /* ---------- What people mention ---------- */
 .kw-list { margin: 0 calc(-1 * var(--seam-pad)) -13px; }

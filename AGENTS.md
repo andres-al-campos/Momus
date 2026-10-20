@@ -21,7 +21,8 @@ Look-and-feel calls, with the owner's why.
   from the trust card's evidence row it backs, with a line saying what it
   measures; there is no separate drawer of leftovers.
 - **WebTime's design language** (2026-10-18): its tokens, IBM Plex Sans/Mono,
-  dark ground. Mockups in `designs/`.
+  dark ground. Mockups in `designs/`. Since 2026-10-19 the ground is pitch
+  black, with cards a step lighter.
 - **Colour says good or bad for the place** (2026-10-18). Data bars are
   WebTime's blue. Numbers are green when good for the place, amber in
   between, and red when bad, as in the old keyword list: "pretty intuitive."
@@ -65,6 +66,14 @@ Look-and-feel calls, with the owner's why.
   each other. The red-flags card keeps its coral edge.
 - **Star bars are thin and close together, and ★ is a real star glyph**
   (2026-10-19). IBM Plex has no ★, and the fallback looked like an asterisk.
+- **Every text colour reads at 4.5:1 or better** (2026-10-19), because dark
+  apps are "always such a pain" to read. WebTime's faint grey (2.9:1 on a
+  card) and its blue button (3.5:1) both failed, and the faint text was also
+  the smallest. Check a new colour against its ground before using it.
+- **Roomy header, centred column** (2026-10-19). The header was cramped: it
+  is taller, with a full-size New scrape button. The scrolling column
+  reserves scrollbar space on both sides, so the scrollbar sits inside the
+  margin instead of beside the content.
 
 ## Feature map
 
