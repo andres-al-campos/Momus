@@ -21,6 +21,9 @@ it directly; otherwise it's a sub-feature.
 
 ## Each file has
 
+- **A stamp** under the title, one line: ``Checked against 1.19.0. Covers
+  `popup/popup.js`, `background.js`.`` The version every statement was last
+  read against the code at, and the code the file describes.
 - **Sub-features**: the selling points; the README's feature list comes from these.
 - **How to get to it**: the user's path.
 - **Driving it**: preconditions, then steps an agent can follow, or why it's blocked.
@@ -32,7 +35,14 @@ it directly; otherwise it's a sub-feature.
 
 Update a feature's file in the same commit that changes the feature. Write
 only what a user can do and observe: paths, commands, results. Code locations
-are left out on purpose; read the code when a task needs them.
+are left out on purpose, apart from the stamp's Covers; read the code when a
+task needs them.
+
+Re-stamp a file only after reading it against the code again. `./build.sh
+check` (✓ `doc-stamps`) fails when code a file covers has changed since its
+stamp's version, so files come due at each version bump. The README and the
+guides in `docs/` follow the same rule once they have a stamp; until then
+they're unchecked.
 
 ## Driving conventions
 

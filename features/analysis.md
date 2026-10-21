@@ -1,5 +1,7 @@
 # Read the analysis
 
+Checked against 1.19.0. Covers `content/`, `popup/`, `scripts/reprocess.js`.
+
 The popup's results after a scrape: how trustworthy a place's reviews look and
 what problems they mention.
 
