@@ -1,4 +1,4 @@
-// Law: the results view colours numbers by the cut-offs in AGENTS.md, counts
+// Law: the results view colours numbers by the cut-offs in features/analysis.md (Calls), counts
 // a review once per red-flag group, and hides typos it can't trust.
 //
 // Usage: node laws/summarize.mjs [repo-root]
@@ -39,19 +39,19 @@ const scrape = (overrides = {}) => ({
 // Rating: green from 4.3★, red under 3.8★.
 for (const [rating, tone] of [[4.3, 'good'], [4.2, 'mid'], [3.8, 'mid'], [3.7, 'bad']]) {
   expect(`rating ${rating} tone`, summarize(scrape({ stats: { ...scrape().stats, averageRating: rating } })).ratingTone, tone,
-    'Rating cut-offs live in CUTOFFS.rating in popup/summarize.js; AGENTS.md says green from 4.3, red under 3.8.');
+    'Rating cut-offs live in CUTOFFS.rating in popup/summarize.js; features/analysis.md says green from 4.3, red under 3.8.');
 }
 
 // Keyword ≥4★ share: green from 70%, red under 40%.
 const kw = (low) => summarize(scrape({ analysis: { googleKeywordCorrelation: { pool: { reviewCount: 10, lowRatingPct: low, oneStarPct: 0 } } } })).keywords[0].tone;
-expect('keyword 70% tone', kw(30), 'good', 'See CUTOFFS.keywordHigh; AGENTS.md says green from 70%.');
-expect('keyword 40% tone', kw(60), 'mid', 'See CUTOFFS.keywordHigh; AGENTS.md says red under 40%.');
-expect('keyword 39% tone', kw(61), 'bad', 'See CUTOFFS.keywordHigh; AGENTS.md says red under 40%.');
+expect('keyword 70% tone', kw(30), 'good', 'See CUTOFFS.keywordHigh; features/analysis.md says green from 70%.');
+expect('keyword 40% tone', kw(60), 'mid', 'See CUTOFFS.keywordHigh; features/analysis.md says red under 40%.');
+expect('keyword 39% tone', kw(61), 'bad', 'See CUTOFFS.keywordHigh; features/analysis.md says red under 40%.');
 
 // Red flags: 4 of 10 reviews are ≤3★ (red over 40% only), 2 of those 4 name a flag.
 const rf = summarize(scrape()).redFlags;
 expect('share of reviews ≤3★', rf.lowShare, 40, 'lowShare should be ≤3★ reviews over all reviews.');
-expect('share ≤3★ tone at 40%', rf.lowTone, 'mid', 'See CUTOFFS.lowShare; AGENTS.md says red over 40%.');
+expect('share ≤3★ tone at 40%', rf.lowTone, 'mid', 'See CUTOFFS.lowShare; features/analysis.md says red over 40%.');
 expect('share naming a flag', rf.namedShare, 50, 'namedShare should be flagged ≤3★ reviews over all ≤3★ reviews.');
 const pests = rf.groups.find((g) => g.name === 'Pests');
 expect('Pests counts one review once', pests?.reviews, 1,

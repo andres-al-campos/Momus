@@ -5,84 +5,33 @@ residents actually say about living there, before you sign a lease.
 
 ## Principles
 
-Look-and-feel calls, with the owner's why.
+General rules for look and feel, each with the owner's why. A ruling on one
+feature goes in its file in `features/`, under Calls.
 
-- **One narrow column, scrape and results a click apart** (2026-10-18). Use
-  goes back and forth: collect candidates on Zillow or apartments.com, scrape
-  each in Momus, check results, repeat. A single column that switches between
-  scrape and results fits that loop better than a wide view.
-- **The popup opens on the last scrape, whatever page you're on**
-  (2026-10-18). It answers "did I scan this one already?" while hopping
-  between places.
-- **Three cards, one question each** (2026-10-18): Can you trust them? What
-  do people mention? What goes wrong? Trust leads, then Google's keywords,
-  then red flags, which the owner found among the most informative. Every
-  supporting number (word count by rating, posting bursts, star counts) opens
-  from the trust card's evidence row it backs, with a line saying what it
-  measures; there is no separate drawer of leftovers.
-- **WebTime's design language** (2026-10-18): its tokens, IBM Plex Sans/Mono,
-  dark ground. Mockups in `designs/`. Since 2026-10-19 the ground is
-  near-black (#0d0e11), with cards a step lighter: pitch black was asked
-  for, then eased a little once the greys were brightened.
-- **Colour says good or bad for the place** (2026-10-18). Data bars are
-  WebTime's blue. Numbers are green when good for the place, amber in
-  between, and red when bad, as in the old keyword list: "pretty intuitive."
-  Three steps are enough; no lighter in-between greens. Unlike WebTime, which
-  never uses red because it's grading your own browsing, Momus is judging an
-  apartment.
-- **Colour cut-offs** (2026-10-18), from the spread across 16 saved places,
-  rounded: keyword ≥4★ share green from 70%, red under 40%; keyword 1★ share
-  green under 10%, red over 30%; share of reviews ≤3★ green under 10%, red
-  over 40%; low reviews naming a problem green under 35%, red over 60%. Too
-  few places to be significant; retune as scrapes accumulate.
-- **Keywords tell one story per topic** (2026-10-18): "pools (10 reviews)",
-  then "90% rated ≥4★" in the row's one colour, the 1★ share and red flags
-  (with counts) in grey. No average, since it moves with the ≥4★ share. Say
-  "rated", never "liked": Momus knows a review's stars, not what it thinks of
-  the topic. One colour per row, because colouring each number made each
-  colour look like it meant something different.
-- **Each section tells a story, in reading order** (2026-10-18). Red flags:
-  "29% of reviews are ≤3★. 62% of those mention these red flags:" then the
-  flags grouped by kind. Shares carry the story; raw "x of y" counts are
-  secondary and can go.
-- **Red flags are grouped by kind and tinted coral** (2026-10-18). The groups
-  are the headings in `content/keywords.js` (pests, leaks and mold, crime,
-  management, noise, move-out), sorted by how many low reviews mention each.
-  The card's ground, border and word chips are coral, the one card off the
-  shared ground, because the old pink-tinted card was missed; group labels
-  stay plain so each group reads as its own block. Red-flag words use the
-  shared red, not a lighter coral, which read as orange.
-- **The header is the place's name, then "3.8★ · 364 reviews" at a readable
-  size** (2026-10-19). The rating is coloured: green from 4.3★, red under
-  3.8★ (16 saved places average 4.1). Sort order isn't shown: most scrapes
-  read every review, so it rarely matters.
-- **Explanations live in the opened evidence row, not tooltips**
-  (2026-10-19). Opening the row is the reader asking; a tooltip would add a
-  hover nobody finds. Tooltips only go on things that don't open.
-- **Typos are evidence, counted per word** (2026-10-19). A "5★ typos" row
-  shows the share of words misspelled by rating; per review, long reviews
-  look worse just for being long. Typos don't feed the verdict: no study
-  found them to separate fake from real reviews.
-- **One border grey, the buttons'** (2026-10-19), so cards don't blend into
-  each other. The red-flags card keeps its coral edge.
-- **Star bars are thin and close together, and ★ is a real star glyph**
-  (2026-10-19). IBM Plex has no ★, and the fallback looked like an asterisk.
-- **Grey text is bright** (2026-10-19), because dark apps are "always such a
-  pain" to read and "all that grey text" still felt low-contrast at 4.5:1.
-  Dim text is #c4c9d1 (10.6:1 on a card), faint is #9aa1ac (6.8:1), and the
-  blue button is darkened to 5:1 for its white text. Two grey ranks stay
-  distinct so notes read as secondary. Check a new colour against its ground
-  before using it.
-- **Roomy header, centred column** (2026-10-19). The header was cramped: it
-  is taller, with a full-size New scrape button. The scrolling column
-  reserves scrollbar space on both sides, so the scrollbar sits inside the
-  margin instead of beside the content.
-- **Progress is the Scrape button's text** (2026-10-20). The small status line
-  was too small to follow, and the button is where the eye is after clicking.
-  While busy it stays unclickable and slightly dimmed, less than a disabled
-  button so the text reads. Errors and outcomes sit under the button at
-  body-text size, an error boxed in the red-flag coral; under it, so the
-  button doesn't move when one appears.
+- 2026-10-18. The popup follows the loop it's used in: what's used back and
+  forth sits a click apart, and opening it answers the question it's opened
+  with. Use goes back and forth between listings and Momus, and the question
+  on opening is "did I scan this one already?"
+- 2026-10-18. Each section answers one question, in the order a reader asks
+  them, and reads as a sentence. Supporting detail opens from the claim it
+  backs; there is no drawer of leftovers.
+- 2026-10-18. Colour means good or bad for the place, in three steps, and
+  appears only where it means that. Colouring every number made each colour
+  look like it meant something different; three steps were enough.
+- 2026-10-18. Words claim only what the data knows: Momus knows a review's
+  stars, not what it thinks of a topic, so it says "rated", never "liked".
+- 2026-10-18. Momus speaks WebTime's design language, so the owner's tools
+  look like one family.
+- 2026-10-19. An explanation appears when the reader asks for it, by opening
+  what they're curious about. A hover is something nobody finds.
+- 2026-10-19. Only evidence known to tell fake reviews from real ones feeds
+  the verdict; the rest is shown as evidence. No study found typos to do it.
+- 2026-10-19. Text reads without effort on the dark ground. Dark apps are
+  "always such a pain" to read, and grey text at 4.5:1 still felt
+  low-contrast. Check a new colour against its ground before using it.
+- 2026-10-20. Feedback shows where the eye already is after acting, and
+  nothing moves what the user is aiming at. A status line under the Scrape
+  button was too small to follow.
 
 ## Feature map
 

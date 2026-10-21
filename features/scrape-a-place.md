@@ -27,6 +27,23 @@ Blocked for unattended runs: Google may show consent or bot checks, and a
 CAPTCHA ends the run. Drive it with a person present, then save the JSON to
 `reviews/` as a fixture for the other features.
 
+## Calls
+
+Rulings on this feature, with the owner's why at the time.
+
+- 2026-10-18. One narrow column, scrape and results a click apart. Use goes back
+  and forth: collect candidates on Zillow or apartments.com, scrape each in
+  Momus, check results, repeat. A single column that switches between scrape and
+  results fits that loop better than a wide view.
+- 2026-10-18. The popup opens on the last scrape, whatever page you're on. It
+  answers "did I scan this one already?" while hopping between places.
+- 2026-10-20. Progress is the Scrape button's text. The small status line was
+  too small to follow, and the button is where the eye is after clicking. While
+  busy it stays unclickable and slightly dimmed, less than a disabled button so
+  the text reads. Errors and outcomes sit under the button at body-text size, an
+  error boxed in the red-flag coral; under it, so the button doesn't move when
+  one appears.
+
 ## Gotchas
 
 - The scraper depends on Google's DOM. "No reviews found" or "Could not find

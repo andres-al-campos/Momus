@@ -24,6 +24,8 @@ it directly; otherwise it's a sub-feature.
 - **Sub-features**: the selling points; the README's feature list comes from these.
 - **How to get to it**: the user's path.
 - **Driving it**: preconditions, then steps an agent can follow, or why it's blocked.
+- **Calls**: rulings on this feature, dated, with the owner's why. A rule that
+  holds across Momus goes in AGENTS.md's Principles instead.
 - **Gotchas**: what has bitten us.
 
 ## Keeping it current

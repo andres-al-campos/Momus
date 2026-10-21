@@ -1,5 +1,6 @@
 /* Momus popup, in WebTime's design language: its tokens, IBM Plex, dark
-   ground. The look-and-feel calls behind it are in AGENTS.md, Principles. */
+   ground. The rules behind it are in AGENTS.md, Principles; the specific calls
+   in features/analysis.md, Calls. */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
 
 :root {
