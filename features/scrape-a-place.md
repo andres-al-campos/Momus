@@ -36,6 +36,14 @@ CAPTCHA ends the run. Drive it with a person present, then save the JSON to
   showing the error.
 - Some markup changes fail silently: a broken histogram selector gives zero
   counts and NaN stats with no error.
+- Signed out, Google shows a "limited view": 3–5 reviews, then "See more
+  reviews" asks you to sign in, so a scrape reads only those few and judges
+  them. Sign in to Google first. Under Playwright, a profile signed in by hand
+  stays signed in only without Playwright's fake keychain
+  (`--use-mock-keychain`), which can't decrypt the saved cookies.
+- Hotels don't scrape: their reviews show ratings as "5/5" text (some from
+  partner sites like Trip.com), not star icons, and the scrape fails with "No
+  reviews found. The page structure might have changed."
 - A search-results URL isn't a place page and fails with "Not on a Google Maps
   place page".
 - The popup keeps the last scrape in `storage.local`, although the README's
