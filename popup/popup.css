@@ -91,6 +91,9 @@ body {
 }
 .btn:hover:not(:disabled) { background: var(--bg-hover); }
 .btn:disabled { opacity: 0.45; cursor: default; }
+/* A running scrape's progress is the button's text: dimmed less than a disabled
+   button, so it reads as busy and stays readable. */
+.btn.busy:disabled { opacity: 0.7; }
 .btn-sm { height: var(--control-h-sm); border-radius: var(--radius-control-sm); padding: 0 11px; }
 .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
 .btn-primary:hover:not(:disabled) { background: #2f5fcc; }
@@ -148,10 +151,14 @@ select, textarea {
 select { height: var(--control-h-sm); padding: 0 8px; min-width: 140px; }
 textarea { width: 100%; height: 90px; padding: 8px 10px; resize: vertical; font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
 textarea::placeholder { color: var(--text-faint); }
-.status { font-size: 12px; color: var(--text-dim); margin-top: 10px; min-height: 16px; }
+/* Outcomes and errors; progress shows on the Scrape button. Body-text size, so
+   an error can't be missed, and an error boxed like the red-flag cards. */
+.status { font-size: 13px; line-height: 1.45; color: var(--text-dim); margin-top: 10px; }
+.status:empty { display: none; }
 .status.complete { color: var(--good); }
 .status.warning { color: var(--warn); }
-.status.error { color: var(--bad); }
+.status.error { color: var(--bad); background: var(--flag-ground); border: 1px solid var(--flag-line);
+  border-radius: var(--radius-control); padding: 8px 10px; }
 .bulk-controls { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
 .bulk-progress { margin-top: 10px; }
 .progress-text { font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }

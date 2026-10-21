@@ -77,6 +77,12 @@ Look-and-feel calls, with the owner's why.
   is taller, with a full-size New scrape button. The scrolling column
   reserves scrollbar space on both sides, so the scrollbar sits inside the
   margin instead of beside the content.
+- **Progress is the Scrape button's text** (2026-10-20). The small status line
+  was too small to follow, and the button is where the eye is after clicking.
+  While busy it stays unclickable and slightly dimmed, less than a disabled
+  button so the text reads. Errors and outcomes sit under the button at
+  body-text size, an error boxed in the red-flag coral; under it, so the
+  button doesn't move when one appears.
 
 ## Feature map
 

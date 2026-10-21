@@ -396,9 +396,16 @@ function formatSummary(view) {
   return lines.join('\n');
 }
 
+// Progress shows on the Scrape button, where the eye already is after clicking
+// it; the line above was too small to follow. Outcomes and errors stay on the
+// line, since they can run longer than a button.
+const SCRAPE_LABEL = scrapeBtn.textContent;
 function setStatus(type, message) {
-  statusEl.className = `status ${type}`;
-  statusEl.textContent = message;
+  const busy = type === 'scanning' || type === 'scraping' || type === 'warning';
+  scrapeBtn.textContent = busy ? message : SCRAPE_LABEL;
+  scrapeBtn.classList.toggle('busy', busy);
+  statusEl.className = busy ? 'status' : `status ${type}`;
+  statusEl.textContent = busy ? '' : message;
 }
 
 // ---------- bulk scrape ----------

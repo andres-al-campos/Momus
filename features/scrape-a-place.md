@@ -9,6 +9,8 @@ in the browser. Everything else in Momus starts from the data this produces.
 - Max reviews: 100 / 200 / 300 / 500 (default) / all
 - Opens the Reviews tab, scrolls to load reviews, expands "More" on long ones
 - Remembers the last scrape and the chosen options when the popup reopens
+- While it runs, the Scrape button shows the progress (scanning, loaded and
+  analyzing counts, retries); an error shows in a red box under it
 
 ## How to get to it
 
