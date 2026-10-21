@@ -15,3 +15,6 @@ reviews/
 # Process files: mockups and plans stay local
 designs/
 plans/
+
+# Loose screenshots, not part of the extension
+images/
