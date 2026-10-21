@@ -85,11 +85,11 @@ owner's why at the time.
   share of words misspelled by rating; per review, long reviews look worse just
   for being long. Typos don't feed the verdict: no study found them to separate
   fake from real reviews.
-- 2026-10-19. One border grey, the buttons'. , so cards don't blend into each
+- 2026-10-19. One border grey, the buttons', so cards don't blend into each
   other. The red-flags card keeps its coral edge.
 - 2026-10-19. Star bars are thin and close together, and ★ is a real star glyph.
   IBM Plex has no ★, and the fallback looked like an asterisk.
-- 2026-10-19. Grey text is bright. , because dark apps are "always such a pain"
+- 2026-10-19. Grey text is bright, because dark apps are "always such a pain"
   to read and "all that grey text" still felt low-contrast at 4.5:1. Dim text is
   #c4c9d1 (10.6:1 on a card), faint is #9aa1ac (6.8:1), and the blue button is
   darkened to 5:1 for its white text. Two grey ranks stay distinct so notes read
