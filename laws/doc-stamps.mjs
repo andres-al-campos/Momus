@@ -58,7 +58,7 @@ for (const doc of docs) {
 
 // Principle names, from "**Name.**" after each Principle's time.
 const agents = fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8');
-const principles = new Set([...agents.matchAll(/^- [^*\n]*\*\*(.+?)\.\*\*/gm)].map((m) => m[1]));
+const principles = new Set([...(agents.split(/^## /m).find((s) => s.startsWith('Principles')) ?? '').matchAll(/^- [^*\n]*\*\*(.+?)\.\*\*/gm)].map((m) => m[1]));
 
 let entries = 0;
 for (const file of ['AGENTS.md', ...features]) {
