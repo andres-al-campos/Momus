@@ -1,5 +1,7 @@
 # Testing Checklist
 
+Updated 2026-10-03 15:10, at 1.17.1.
+
 Use this checklist to verify the extension works correctly.
 
 ## Initial Setup

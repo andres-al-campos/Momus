@@ -1,6 +1,6 @@
 # Read the analysis
 
-Checked 2026-10-20 21:36, at 1.19.0.
+Updated 2026-10-20 21:36, at 1.19.0.
 
 The popup's results after a scrape: how trustworthy a place's reviews look and
 what problems they mention.

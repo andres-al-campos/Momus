@@ -1,6 +1,6 @@
 # Bulk scrape
 
-Checked 2026-10-20 21:36, at 1.19.0.
+Updated 2026-10-20 21:36, at 1.19.0.
 
 Scrape a list of places in one go. Each place's JSON downloads automatically,
 ready for Compare locations.

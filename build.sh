@@ -15,6 +15,8 @@ set -e  # Exit on error
 # Run from the project root (the directory this script lives in), so the build
 # works no matter where it's invoked from.
 cd "$(dirname "$0")"
+# The pre-commit hook stamps the docs a commit changes (hooks/stamp-docs.mjs).
+git config core.hooksPath hooks
 
 MODE="${1:-firefox}"
 case "$MODE" in

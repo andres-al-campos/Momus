@@ -1,10 +1,8 @@
-// Law: each feature file carries a stamp, "Checked YYYY-MM-DD HH:MM, at <version>.", and each
-// Principle and Call starts "YYYY-MM-DD HH:MM, <version>.", with a time that isn't in the future
-// and a version Momus has had. A session reading a file rereads it against the code when that
-// code changed since the stamp (features/README.md, Keeping it current). The README and the
-// guides in docs/ are held to the same form once they have a stamp.
-//
-// Can't catch a stamp set without a reread.
+// Law: each feature file, the README and any guide in docs/ (not the changelog) carries a stamp, "Updated
+// YYYY-MM-DD HH:MM, at <version>.", and each Principle and Call starts "YYYY-MM-DD HH:MM,
+// <version>.", with a time that isn't in the future and a version Momus has had. A Call's
+// "Applies *Name*." names a Principle in AGENTS.md. The pre-commit hook (hooks/stamp-docs.mjs)
+// writes the stamps; this catches a commit made with the hook off.
 //
 // Usage: node laws/doc-stamps.mjs [repo-root]
 
@@ -15,13 +13,12 @@ import { fileURLToPath } from 'node:url';
 
 const root = process.argv[2] ?? path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const current = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8')).version;
-const STAMP = /^Checked (.+), at (\S+)\.$/m;
-const ENTRY = /^- (\d{4}-\d\d-\d\d)\b(.*)/; // a dated Principle or Call
+const STAMP = /^Updated (.+), at (\S+)\.$/m;
 const md = (dir) => fs.existsSync(path.join(root, dir))
   ? fs.readdirSync(path.join(root, dir)).filter((f) => f.endsWith('.md')).map((f) => `${dir}/${f}`)
   : [];
-const required = md('features').filter((f) => f !== 'features/README.md');
-const docs = [...required, 'README.md', ...md('docs')];
+const features = md('features');
+const docs = [...features, 'README.md', ...md('docs').filter((f) => f !== 'docs/CHANGELOG.md')];
 
 // Every version manifest.json has had, so a typo'd version doesn't pass for a real one.
 const known = new Set([current]);
@@ -50,32 +47,38 @@ let stamped = 0;
 for (const doc of docs) {
   const stamp = fs.readFileSync(path.join(root, doc), 'utf8').match(STAMP);
   if (!stamp) {
-    if (required.includes(doc)) {
-      failures.push(`${doc} has no stamp. Read it against the code, then add under its title: ` +
-        `"Checked ${stampNow()}, at ${current}."`);
-    }
+    failures.push(`${doc} has no stamp. Turn the hook on (./build.sh does it) and it adds one the next time the file is committed, ` +
+      `or add under its title: "Updated ${stampNow()}, at ${current}."`);
     continue;
   }
   stamped++;
   const problem = check(stamp[1], stamp[2]);
-  if (problem) failures.push(`${doc}'s stamp: ${problem}. Set it to when you read the doc against the code, like "Checked ${stampNow()}, at ${current}."`);
+  if (problem) failures.push(`${doc}'s stamp: ${problem}. Set it to when the description last changed, like "Updated ${stampNow()}, at ${current}."`);
 }
 
+// Principle names, from "**Name.**" after each Principle's time.
+const agents = fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8');
+const principles = new Set([...agents.matchAll(/^- [^*\n]*\*\*(.+?)\.\*\*/gm)].map((m) => m[1]));
+
 let entries = 0;
-for (const file of ['AGENTS.md', ...required]) {
+for (const file of ['AGENTS.md', ...features]) {
+  let inSection = false;
   fs.readFileSync(path.join(root, file), 'utf8').split('\n').forEach((line, i) => {
-    const entry = line.match(ENTRY);
-    if (!entry) return;
+    if (/^#{1,6} /.test(line)) inSection = /^## (Principles|Calls)\b/.test(line);
+    if (!inSection || !line.startsWith('- ')) return;
     entries++;
     const prefix = line.match(/^- (\d{4}-\d\d-\d\d \d\d:\d\d), (\S+?)\. /);
     const problem = prefix ? check(prefix[1], prefix[2])
       : `starts "${line.slice(2, 22)}…" without a time and version`;
     if (problem) failures.push(`${file}:${i + 1}: ${problem}. Start it with when the call was made and Momus's version then, like "- ${stampNow()}, ${current}. ".`);
   });
+  for (const [, name] of fs.readFileSync(path.join(root, file), 'utf8').matchAll(/Applies \*(.+?)\*\./g)) {
+    if (!principles.has(name)) failures.push(`${file}: cites "${name}", which isn't a Principle in AGENTS.md (${[...principles].join(', ')}). Cite one of those, or none.`);
+  }
 }
 
 if (failures.length) {
   for (const f of failures) console.error(`✗ doc-stamps: ${f}`);
   process.exit(1);
 }
-console.log(`✓ doc-stamps: ${stamped} docs stamped, ${entries} Principles and Calls dated, each with a time and version Momus has had`);
+console.log(`✓ doc-stamps: ${stamped} docs stamped, ${entries} Principles and Calls dated, each with a time and version Momus has had; every cited Principle exists`);

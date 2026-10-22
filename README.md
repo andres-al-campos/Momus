@@ -1,5 +1,7 @@
 # Momus — Google Maps Review Analyzer
 
+Updated 2026-10-19 23:27, at 1.18.3.
+
 A Firefox and Chrome extension that scrapes and analyzes Google Maps reviews for apartment hunting and location research. Momus scrapes every review from a location, flags fake-review patterns and red flags, and, once you've gathered several locations, ranks them side by side with the included `scripts/analyze.js` script and `scripts/compare.html` dashboard.
 
 ## Features

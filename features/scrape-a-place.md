@@ -1,6 +1,6 @@
 # Scrape a place
 
-Checked 2026-10-20 21:36, at 1.19.0.
+Updated 2026-10-20 21:36, at 1.19.0.
 
 Load every review (up to a limit) from one Google Maps place and analyze them
 in the browser. Everything else in Momus starts from the data this produces.

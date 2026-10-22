@@ -1,5 +1,7 @@
 # Dictionary Analysis
 
+Updated 2026-06-10 18:37, at 1.17.1.
+
 ## Current Dictionary: en_US (Hunspell)
 
 - **Source**: Hunspell (used by LibreOffice, Firefox, Chrome)

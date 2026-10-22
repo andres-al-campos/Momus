@@ -1,6 +1,6 @@
 # Export
 
-Checked 2026-10-20 21:36, at 1.19.0.
+Updated 2026-10-20 21:36, at 1.19.0.
 
 Get a scrape out of the browser: the full data as JSON, or a short text summary.
 

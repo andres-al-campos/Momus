@@ -1,5 +1,7 @@
 # Momus features
 
+Updated 2026-10-22 02:05, at 1.19.0.
+
 What a user can do with Momus, how to reach it, and how to drive it. Read this
 before adding anything: if it's already here, extend it instead of building it
 again.
@@ -21,14 +23,15 @@ it directly; otherwise it's a sub-feature.
 
 ## Each file has
 
-- **A stamp** under the title: `Checked 2026-10-20 21:36, at 1.19.0.` When
-  every statement was last read against the code, and Momus's version then.
+- **A stamp** under the title: `Updated 2026-10-20 21:36, at 1.19.0.` When the
+  description last changed, and Momus's version then. The pre-commit hook in
+  `hooks/` writes it; a change only to the Calls leaves it alone.
 - **Sub-features**: the selling points; the README's feature list comes from these.
 - **How to get to it**: the user's path.
 - **Driving it**: preconditions, then steps an agent can follow, or why it's blocked.
-- **Calls**: rulings on this feature, each starting with the time and the
-  version it was made at, with the owner's why. A rule that holds across Momus
-  goes in AGENTS.md's Principles instead.
+- **Calls**: what was found in one case on this feature, with the owner's why,
+  ending with the Principle in AGENTS.md it applies (`Applies *Name*.`) or none.
+  The hook starts each with the time and version it was made or reworded at.
 - **Gotchas**: what has bitten us.
 
 ## Keeping it current
@@ -37,13 +40,14 @@ Update a feature's file in the same commit that changes the feature. Write
 only what a user can do and observe: paths, commands, results. Code locations
 are left out on purpose; read the code when a task needs them.
 
-Check a file's stamp when you read it. If the code you're about to act on
-changed since then (`git log --since="<stamp time>" -- <paths>`), reread the
-file against it, fix what's no longer true, and re-stamp it. A Call made
-before its subject changed goes to the owner, with the case in hand.
-`./build.sh check` (✓ `doc-stamps`) fails when a feature file has no stamp, or
-a stamp, Principle or Call lacks a time and a version Momus has had. The README and the guides in
-`docs/` carry a stamp once someone checks them; until then they're unchecked.
+Before acting on a file, run `git log --since="<stamp time>"` on the code
+you're about to touch. Where it moved after the stamp, read the file against
+it and fix what's no longer true; the fix moves the stamp. A Call made before
+its subject changed goes to the owner, with the case in hand. `./build.sh`
+turns the hook on. `./build.sh check` (✓ `doc-stamps`) fails when a feature
+file, the README or a guide in `docs/` has no stamp, a stamp, Principle or
+Call lacks a time and a version Momus has had, or a Call cites a Principle
+that doesn't exist.
 
 ## Driving conventions
 

@@ -6,7 +6,7 @@ residents actually say about living there, before you sign a lease.
 ## Principles
 
 General rules for look and feel, each starting with the time and the version it
-was made at, with the owner's why. A ruling on one feature goes in its file in
+was made or reworded at (the hook in `hooks/` writes it), with the owner's why. A ruling on one feature goes in its file in
 `features/`, under Calls.
 
 - 2026-10-18 17:38, 1.17.1. The popup follows the loop it's used in: what's used back and

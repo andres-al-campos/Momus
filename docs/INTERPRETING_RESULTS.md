@@ -1,5 +1,7 @@
 # Interpreting Results - Quick Reference Guide
 
+Updated 2026-06-10 18:37, at 1.17.1.
+
 This guide helps you understand what the scraped data means for apartment hunting.
 
 ## The Suspicion Score
