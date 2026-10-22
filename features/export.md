@@ -1,6 +1,6 @@
 # Export
 
-Checked against 1.19.0. Covers `popup/popup.js`, `popup/summarize.js`, `background.js`.
+Checked against 1.19.0.
 
 Get a scrape out of the browser: the full data as JSON, or a short text summary.
 

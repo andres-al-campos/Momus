@@ -1,6 +1,6 @@
 # Compare locations
 
-Checked against 1.19.0. Covers `scripts/`.
+Checked against 1.19.0.
 
 Rank several scraped places against each other, outside the extension.
 

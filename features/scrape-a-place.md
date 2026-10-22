@@ -1,6 +1,6 @@
 # Scrape a place
 
-Checked against 1.19.0. Covers `content/`, `popup/popup.html`, `popup/popup.js`, `popup/popup.css`.
+Checked against 1.19.0.
 
 Load every review (up to a limit) from one Google Maps place and analyze them
 in the browser. Everything else in Momus starts from the data this produces.

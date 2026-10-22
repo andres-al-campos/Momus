@@ -1,6 +1,6 @@
 # Bulk scrape
 
-Checked against 1.19.0. Covers `popup/popup.html`, `popup/popup.js`, `background.js`.
+Checked against 1.19.0.
 
 Scrape a list of places in one go. Each place's JSON downloads automatically,
 ready for Compare locations.
