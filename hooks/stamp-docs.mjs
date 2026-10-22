@@ -58,7 +58,8 @@ function description(text) {
   }).join('\n').replace(/\s+/g, ' ').trim();
 }
 
-const headDocs = git('ls-tree', '-r', '--name-only', 'HEAD').split('\n').filter(hasEntries);
+// A first commit has no HEAD, so nothing is known yet.
+const headDocs = (tryGit('ls-tree', '-r', '--name-only', 'HEAD') ?? '').split('\n').filter(hasEntries);
 const known = new Set(headDocs.flatMap((f) => entries(tryGit('show', `HEAD:${f}`) ?? '').map((e) => e.body)));
 
 function stamp(file, before, after) {
