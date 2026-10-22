@@ -1,6 +1,6 @@
 # Momus — Google Maps Review Analyzer
 
-Updated 2026-10-19 23:27, at 1.18.3.
+Updated 2026-10-22 18:51, at 1.19.0.
 
 A Firefox and Chrome extension that scrapes and analyzes Google Maps reviews for apartment hunting and location research. Momus scrapes every review from a location, flags fake-review patterns and red flags, and, once you've gathered several locations, ranks them side by side with the included `scripts/analyze.js` script and `scripts/compare.html` dashboard.
 
@@ -104,7 +104,6 @@ The popup doesn't show this score; it's in the JSON and feeds `scripts/analyze.j
       "text": "Review text...",
       "date": "2 months ago",
       "author": "John D",
-      "isLocalGuide": false,
       "spellingErrors": 3,
       "flaggedKeywords": ["management", "maintenance"]
     }
@@ -132,20 +131,20 @@ The extension searches for mentions of:
 
 ## Google Keyword Analysis
 
-The extension also analyzes **Google's highlighted keywords** to see if they're hiding problems:
+Google picks out topics from a place's reviews ("maintenance", "staff"). For each one,
+the popup's "What people mention" card shows how many scraped reviews mention it, the
+share of those rated ≥4★ (green, amber or red), the share rated 1★, and the red flags
+those reviews name, with counts:
 
-When Google shows keywords like "maintenance" or "staff" on a location page, the extension checks:
-- What percentage of reviews mentioning that keyword are ≤3★?
-- What red flags appear alongside that keyword?
-- Is the average rating for that keyword lower than the overall rating?
-
-**Example warning:**
 ```
-"maintenance" → 65% of reviews are ≤3★
-Avg rating: 2.8 | 72% mention red flags: noise(12), broken(8), slow(5)
+maintenance (40 reviews)
+35% rated ≥4★   28% rated 1★
+Red flags: noise 12 · broken 8 · slow 5
 ```
 
-This helps identify when Google is highlighting keywords that actually correlate with negative experiences.
+A topic Google highlights can turn out to be one people mostly complain about. The JSON
+export also carries each topic's average rating and ≤3★ share, under
+`analysis.googleKeywordCorrelation`.
 
 ## Comparing Multiple Locations
 
@@ -258,7 +257,7 @@ This extension:
 - ✅ Does NOT send any data to external servers
 - ✅ Does NOT track you or collect analytics
 - ✅ Only activates on Google Maps pages
-- ✅ Stores no persistent data (only during active scraping)
+- ✅ Keeps only the last scrape and two settings (sort order, review cap) in the browser's extension storage, so the popup reopens on it
 
 ## Future Enhancements
 
