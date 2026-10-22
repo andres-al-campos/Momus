@@ -5,34 +5,35 @@ residents actually say about living there, before you sign a lease.
 
 ## Principles
 
-General rules for look and feel, each starting with the time and the version it
-was made or reworded at (the hook in `hooks/` writes it), with the owner's why. A ruling on one feature goes in its file in
-`features/`, under Calls.
+How Momus ought to be, so a session can decide a case nobody has met yet. Each
+earns its place by deciding Calls, the rulings in `features/`, which end by
+naming the principle they apply. Listed in the order they were written; when two
+disagree on a case, the owner decides and the winner moves up. The hook in
+`hooks/` starts each with the time and version it was made or reworded at.
 
-- 2026-10-18 17:38, 1.17.1. The popup follows the loop it's used in: what's used back and
-  forth sits a click apart, and opening it answers the question it's opened
-  with. Use goes back and forth between listings and Momus, and the question
-  on opening is "did I scan this one already?"
-- 2026-10-18 19:21, 1.17.1. Each section answers one question, in the order a reader asks
-  them, and reads as a sentence. Supporting detail opens from the claim it
-  backs; there is no drawer of leftovers.
-- 2026-10-18 17:46, 1.17.1. Colour means good or bad for the place, in three steps, and
-  appears only where it means that. Colouring every number made each colour
-  look like it meant something different; three steps were enough.
-- 2026-10-18 18:23, 1.17.1. Words claim only what the data knows: Momus knows a review's
-  stars, not what it thinks of a topic, so it says "rated", never "liked".
-- 2026-10-18 17:38, 1.17.1. Momus speaks WebTime's design language, so the owner's tools
-  look like one family.
-- 2026-10-19 00:24, 1.17.1. An explanation appears when the reader asks for it, by opening
-  what they're curious about. A hover is something nobody finds.
-- 2026-10-19 00:24, 1.17.1. Only evidence known to tell fake reviews from real ones feeds
-  the verdict; the rest is shown as evidence. No study found typos to do it.
-- 2026-10-19 23:24, 1.18.3. Text reads without effort on the dark ground. Dark apps are
-  "always such a pain" to read, and grey text at 4.5:1 still felt
-  low-contrast. Check a new colour against its ground before using it.
-- 2026-10-20 20:41, 1.18.3. Feedback shows where the eye already is after acting, and
-  nothing moves what the user is aiming at. A status line under the Scrape
-  button was too small to follow.
+- 2026-10-22 02:20, 1.19.0. **Fits the hunt.** Momus is used back and forth with the listing sites, so
+  what's used together sits a click apart, and opening it answers the question
+  it's opened with: "did I scan this one already?" A wide dashboard suits
+  someone studying one place; a renter is comparing many.
+- 2026-10-22 02:20, 1.19.0. **Colour is a verdict.** Colour means good or bad for the place, in three
+  steps, and appears only where it means that. Colouring every number made each
+  colour look like it meant something different; three steps were enough.
+- 2026-10-22 02:20, 1.19.0. **One family with WebTime.** Momus speaks WebTime's design language (its
+  tokens, fonts and dark ground), so the owner's tools read as one set. Where
+  Momus's job differs, the job wins: WebTime never uses red, but Momus judges a
+  place, so *Colour is a verdict* comes first.
+- 2026-10-22 02:20, 1.19.0. **Claims no more than the data knows.** Words, the verdict and colour claim
+  only what the evidence supports. Momus knows a review's stars, not what it
+  thinks of a topic, and a signal no study has shown to tell fake reviews from
+  real ones is shown as evidence, not scored.
+- 2026-10-22 02:20, 1.19.0. **Answers in the order they're asked.** Each section answers one question a
+  renter has, in the order they ask it, and reads as a sentence. Detail opens
+  from the claim it backs when the reader asks by opening it; a hover is
+  something nobody finds, and there is no drawer of leftovers.
+- 2026-10-22 02:20, 1.19.0. **Easy to read and follow.** Text reads without effort on the dark ground,
+  feedback shows where the eye already is after acting, and nothing moves what
+  the user is aiming at. Dark apps are "always such a pain" to read, and a
+  status line under the Scrape button was too small to follow.
 
 ## Feature map
 

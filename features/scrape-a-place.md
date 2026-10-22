@@ -36,15 +36,15 @@ Rulings on this feature, with the owner's why at the time.
 - 2026-10-18 17:38, 1.17.1. One narrow column, scrape and results a click apart. Use goes back
   and forth: collect candidates on Zillow or apartments.com, scrape each in
   Momus, check results, repeat. A single column that switches between scrape and
-  results fits that loop better than a wide view.
+  results fits that loop better than a wide view. Applies *Fits the hunt*.
 - 2026-10-18 17:38, 1.17.1. The popup opens on the last scrape, whatever page you're on. It
-  answers "did I scan this one already?" while hopping between places.
+  answers "did I scan this one already?" while hopping between places. Applies *Fits the hunt*.
 - 2026-10-20 20:41, 1.18.3. Progress is the Scrape button's text. The small status line was
   too small to follow, and the button is where the eye is after clicking. While
   busy it stays unclickable and slightly dimmed, less than a disabled button so
   the text reads. Errors and outcomes sit under the button at body-text size, an
   error boxed in the red-flag coral; under it, so the button doesn't move when
-  one appears.
+  one appears. Applies *Easy to read and follow*.
 
 ## Gotchas
 
