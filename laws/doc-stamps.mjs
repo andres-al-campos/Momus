@@ -65,16 +65,17 @@ for (const file of ['AGENTS.md', ...features]) {
   let inSection = false;
   fs.readFileSync(path.join(root, file), 'utf8').split('\n').forEach((line, i) => {
     if (/^#{1,6} /.test(line)) inSection = /^## (Principles|Calls)\b/.test(line);
-    if (!inSection || !line.startsWith('- ')) return;
+    if (!inSection) return;
+    for (const [, name] of line.matchAll(/Applies \*(.+?)\*\./g)) {
+      if (!principles.has(name)) failures.push(`${file}:${i + 1}: cites "${name}", which isn't a Principle in AGENTS.md (${[...principles].join('; ') || 'none named yet'}). Cite one of those, or none.`);
+    }
+    if (!line.startsWith('- ')) return;
     entries++;
     const prefix = line.match(/^- (\d{4}-\d\d-\d\d \d\d:\d\d), (\S+?)\. /);
     const problem = prefix ? check(prefix[1], prefix[2])
       : `starts "${line.slice(2, 22)}…" without a time and version`;
     if (problem) failures.push(`${file}:${i + 1}: ${problem}. Start it with when the call was made and Momus's version then, like "- ${stampNow()}, ${current}. ".`);
   });
-  for (const [, name] of fs.readFileSync(path.join(root, file), 'utf8').matchAll(/Applies \*(.+?)\*\./g)) {
-    if (!principles.has(name)) failures.push(`${file}: cites "${name}", which isn't a Principle in AGENTS.md (${[...principles].join(', ')}). Cite one of those, or none.`);
-  }
 }
 
 if (failures.length) {
