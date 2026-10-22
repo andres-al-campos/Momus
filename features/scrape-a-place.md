@@ -1,6 +1,6 @@
 # Scrape a place
 
-Checked against 1.19.0.
+Checked 2026-10-20 21:36, at 1.19.0.
 
 Load every review (up to a limit) from one Google Maps place and analyze them
 in the browser. Everything else in Momus starts from the data this produces.
@@ -33,13 +33,13 @@ CAPTCHA ends the run. Drive it with a person present, then save the JSON to
 
 Rulings on this feature, with the owner's why at the time.
 
-- 2026-10-18, 1.17.1. One narrow column, scrape and results a click apart. Use goes back
+- 2026-10-18 17:38, 1.17.1. One narrow column, scrape and results a click apart. Use goes back
   and forth: collect candidates on Zillow or apartments.com, scrape each in
   Momus, check results, repeat. A single column that switches between scrape and
   results fits that loop better than a wide view.
-- 2026-10-18, 1.17.1. The popup opens on the last scrape, whatever page you're on. It
+- 2026-10-18 17:38, 1.17.1. The popup opens on the last scrape, whatever page you're on. It
   answers "did I scan this one already?" while hopping between places.
-- 2026-10-20, 1.18.3. Progress is the Scrape button's text. The small status line was
+- 2026-10-20 20:41, 1.18.3. Progress is the Scrape button's text. The small status line was
   too small to follow, and the button is where the eye is after clicking. While
   busy it stays unclickable and slightly dimmed, less than a disabled button so
   the text reads. Errors and outcomes sit under the button at body-text size, an

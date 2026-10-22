@@ -21,12 +21,12 @@ it directly; otherwise it's a sub-feature.
 
 ## Each file has
 
-- **A stamp** under the title: `Checked against 1.19.0.` The version every
-  statement was last read against the code at.
+- **A stamp** under the title: `Checked 2026-10-20 21:36, at 1.19.0.` When
+  every statement was last read against the code, and Momus's version then.
 - **Sub-features**: the selling points; the README's feature list comes from these.
 - **How to get to it**: the user's path.
 - **Driving it**: preconditions, then steps an agent can follow, or why it's blocked.
-- **Calls**: rulings on this feature, each starting with the date and the
+- **Calls**: rulings on this feature, each starting with the time and the
   version it was made at, with the owner's why. A rule that holds across Momus
   goes in AGENTS.md's Principles instead.
 - **Gotchas**: what has bitten us.
@@ -37,12 +37,12 @@ Update a feature's file in the same commit that changes the feature. Write
 only what a user can do and observe: paths, commands, results. Code locations
 are left out on purpose; read the code when a task needs them.
 
-Check a file's stamp when you read it. If `manifest.json` has moved past it
-and you're about to act on the file, reread it against the code you're
-touching, fix what's no longer true, and re-stamp it. A Call made at an older
-version whose subject has changed since goes to the owner, with the case in
-hand. `./build.sh check` (✓ `doc-stamps`) fails when a feature file has no
-stamp or names a version Momus never had. The README and the guides in
+Check a file's stamp when you read it. If the code you're about to act on
+changed since then (`git log --since="<stamp time>" -- <paths>`), reread the
+file against it, fix what's no longer true, and re-stamp it. A Call made
+before its subject changed goes to the owner, with the case in hand.
+`./build.sh check` (✓ `doc-stamps`) fails when a feature file has no stamp, or
+a stamp, Principle or Call lacks a time and a version Momus has had. The README and the guides in
 `docs/` carry a stamp once someone checks them; until then they're unchecked.
 
 ## Driving conventions
