@@ -1,7 +1,5 @@
 # Understanding the Three-Way Analysis
 
-Updated 2026-06-10 18:37, at 1.17.1.
-
 ## Overview
 
 The extension provides three separate analyses to help you spot fake reviews and real problems:
