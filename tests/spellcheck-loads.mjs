@@ -7,7 +7,7 @@
 // every word took over. This loads the manifest's content scripts in order
 // into one shared scope, as the browser does, and checks real misspellings.
 //
-// Usage: node laws/spellcheck-loads.mjs [repo-root]
+// Usage: node tests/spellcheck-loads.mjs [repo-root]
 
 import fs from 'node:fs';
 import path from 'node:path';

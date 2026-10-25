@@ -1,6 +1,6 @@
 # Compare locations
 
-Updated 2026-10-20 21:36, at 1.19.0.
+Updated 2026-10-25 11:42, at 1.19.0.
 
 Rank several scraped places against each other, outside the extension.
 

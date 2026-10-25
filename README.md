@@ -300,7 +300,7 @@ momus/
 │   ├── setup-dev.sh        # Python dev-env setup (uv)
 │   └── requirements.txt
 ├── docs/                   # Guides and notes
-├── laws/                   # Checks for rules a bug once broke
+├── tests/                   # Checks for rules a bug once broke
 ├── build.sh                # Build the extension package
 └── release.sh              # Cut a GitHub release
 ```

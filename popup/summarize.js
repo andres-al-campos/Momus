@@ -3,7 +3,7 @@
 // what counts as good or bad live in one place.
 //
 // Colours are 'good', 'mid' or 'bad' for the place. The cut-offs come from the
-// spread across 16 saved places (features/analysis.md, Calls: Colour cut-offs).
+// spread across 16 saved places (dev/features/analysis.md, Calls: Colour cut-offs).
 
 // Only summarize() leaves this file; the popup's scripts share one scope.
 const summarize = (() => {

@@ -6,10 +6,10 @@ residents actually say about living there, before you sign a lease.
 ## Principles
 
 How Momus ought to be, so a session can decide a case nobody has met yet. Each
-earns its place by deciding Calls, the rulings in `features/`, which end by
+earns its place by deciding Calls, the rulings in `dev/features/`, which end by
 naming the principle they apply. Listed in the order they were written; when two
 disagree on a case, the owner decides and the winner moves up. The hook in
-`hooks/` starts each with the time and version it was made or reworded at.
+`dev/hooks/` starts each with the time and version it was made or reworded at.
 
 - 2026-10-22 02:20, 1.19.0. **Fits the hunt.** Momus is used back and forth with the listing sites, so
   what's used together sits a click apart, and opening it answers the question
@@ -37,5 +37,5 @@ disagree on a case, the owner decides and the winner moves up. The hook in
 
 ## Feature map
 
-`features/` lists what a user can do and how to drive it. Read its README
+`dev/features/` lists what a user can do and how to drive it. Read its README
 before adding or changing a feature.

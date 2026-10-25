@@ -1,6 +1,6 @@
 # Momus features
 
-Updated 2026-10-22 02:05, at 1.19.0.
+Updated 2026-10-25 11:42, at 1.19.0.
 
 What a user can do with Momus, how to reach it, and how to drive it. Read this
 before adding anything: if it's already here, extend it instead of building it
@@ -25,7 +25,7 @@ it directly; otherwise it's a sub-feature.
 
 - **A stamp** under the title: `Updated 2026-10-20 21:36, at 1.19.0.` When the
   description last changed, and Momus's version then. The pre-commit hook in
-  `hooks/` writes it; a change only to the Calls leaves it alone.
+  `dev/hooks/` writes it; a change only to the Calls leaves it alone.
 - **Sub-features**: the selling points; the README's feature list comes from these.
 - **How to get to it**: the user's path.
 - **Driving it**: preconditions, then steps an agent can follow, or why it's blocked.

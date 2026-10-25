@@ -5,7 +5,7 @@
 #                         it reloads itself whenever a source file changes.
 #   ./build.sh chrome     Same, in Chrome.
 #   ./build.sh package    Build the Firefox and Chrome zips into artifacts/.
-#   ./build.sh check      Run every law in laws/ (rules a bug once broke).
+#   ./build.sh check      Run every law in tests/ (rules a bug once broke).
 #
 # Uses the project-local web-ext (a devDependency) via npx, so the build is
 # identical on every machine regardless of what's installed globally.
@@ -15,8 +15,8 @@ set -e  # Exit on error
 # Run from the project root (the directory this script lives in), so the build
 # works no matter where it's invoked from.
 cd "$(dirname "$0")"
-# The pre-commit hook stamps the docs a commit changes (hooks/stamp-docs.mjs).
-git config core.hooksPath hooks
+# The pre-commit hook stamps the docs a commit changes (dev/hooks/stamp-docs.mjs).
+git config core.hooksPath dev/hooks
 
 MODE="${1:-firefox}"
 case "$MODE" in
@@ -30,7 +30,7 @@ esac
 
 if [ "$MODE" = "check" ]; then
     failed=0
-    for law in laws/*.mjs; do
+    for law in tests/*.mjs; do
         node "$law" || failed=1
     done
     [ "$failed" = 0 ] || { echo "❌ A law failed. Each message above says what broke and how to fix it."; exit 1; }
@@ -51,7 +51,7 @@ fi
 # The single list of things the extension does NOT ship. Both browser builds
 # read from this, so the two packages cannot drift apart. In run mode it also
 # keeps edits to these paths from triggering a reload.
-EXCLUDES=(build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/ designs/ images/ features/ laws/ plans/ AGENTS.md)
+EXCLUDES=(build.sh release.sh scripts/ docs/ tools/ .venv/ .gitignore artifacts/ reviews/ node_modules/ package.json package-lock.json .claude/ designs/ images/ dev/features/ tests/ plans/ AGENTS.md)
 
 if [ "$MODE" = "firefox" ] || [ "$MODE" = "chrome" ]; then
     TARGET=firefox-desktop
