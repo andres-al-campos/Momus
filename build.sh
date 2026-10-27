@@ -6,6 +6,7 @@
 #   ./build.sh chrome     Same, in Chrome.
 #   ./build.sh package    Build the Firefox and Chrome zips into artifacts/.
 #   ./build.sh check      Run every law in tests/ (rules a bug once broke).
+#   ./build.sh check --drives  The same, plus the drives (none yet).
 #
 # Uses the project-local web-ext (a devDependency) via npx, so the build is
 # identical on every machine regardless of what's installed globally.
@@ -35,6 +36,11 @@ if [ "$MODE" = "check" ]; then
     done
     [ "$failed" = 0 ] || { echo "❌ A law failed. Each message above says what broke and how to fix it."; exit 1; }
     echo "✅ All laws hold."
+    case "${2:-}" in
+        "") ;;
+        --drives) echo "No drives yet, so check --drives ran the same checks." ;;
+        *) echo "❌ Unknown option '$2'. Use ./build.sh check or ./build.sh check --drives."; exit 1 ;;
+    esac
     exit 0
 fi
 
