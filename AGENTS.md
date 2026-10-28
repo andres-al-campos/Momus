@@ -26,10 +26,6 @@ disagree on a case, the owner decides and the winner moves up. The hook in
   only what the evidence supports. Momus knows a review's stars, not what it
   thinks of a topic, and a signal no study has shown to tell fake reviews from
   real ones is shown as evidence, not scored.
-- 2026-10-22 02:20, 1.19.0. **Answers in the order they're asked.** Each section answers one question a
-  renter has, in the order they ask it, and reads as a sentence. Detail opens
-  from the claim it backs when the reader asks by opening it; a hover is
-  something nobody finds, and there is no drawer of leftovers.
 - 2026-10-22 02:20, 1.19.0. **Easy to read and follow.** Text reads without effort on the dark ground,
   feedback shows where the eye already is after acting, and nothing moves what
   the user is aiming at. Dark apps are "always such a pain" to read, and a

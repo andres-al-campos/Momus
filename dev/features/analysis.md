@@ -40,12 +40,12 @@ checked: open the popup after a scrape.
 Rulings on the results view, and on the popup's look as a whole, with the
 owner's why at the time.
 
-- 2026-10-18 20:49, 1.17.1. Three cards, one question each. Can you trust them? What do people
+- 2026-10-28 18:31, 1.19.0. Three cards, one question each. Can you trust them? What do people
   mention? What goes wrong? Trust leads, then Google's keywords, then red flags,
   which the owner found among the most informative. Every supporting number
   (word count by rating, posting bursts, star counts) opens from the trust
   card's evidence row it backs, with a line saying what it measures; there is no
-  separate drawer of leftovers. Applies *Answers in the order they're asked*.
+  separate drawer of leftovers. Applies none.
 - 2026-10-18 17:38, 1.17.1. WebTime's design language: its tokens, IBM Plex Sans/Mono, dark
   ground. Mockups in `designs/`. Since 2026-10-19 the ground is near-black
   (#0d0e11), with cards a step lighter: pitch black was asked for, then eased a
@@ -66,9 +66,9 @@ owner's why at the time.
   "liked": Momus knows a review's stars, not what it thinks of the topic. One
   colour per row, because colouring each number made each colour look like it
   meant something different. Applies *Claims no more than the data knows*.
-- 2026-10-18 19:21, 1.17.1. Each section tells a story, in reading order. Red flags: "29% of
+- 2026-10-28 18:31, 1.19.0. Each section tells a story, in reading order. Red flags: "29% of
   reviews are ≤3★. 62% of those mention these red flags:" then the flags grouped
-  by kind. Shares carry the story; raw "x of y" counts are secondary and can go. Applies *Answers in the order they're asked*.
+  by kind. Shares carry the story; raw "x of y" counts are secondary and can go. Applies none.
 - 2026-10-18 20:49, 1.17.1. Red flags are grouped by kind and tinted coral. The groups are the
   headings in `content/keywords.js` (pests, leaks and mold, crime, management,
   noise, move-out), sorted by how many low reviews mention each. The card's
@@ -80,9 +80,9 @@ owner's why at the time.
   readable size. The rating is coloured: green from 4.3★, red under 3.8★ (16
   saved places average 4.1). Sort order isn't shown: most scrapes read every
   review, so it rarely matters. Applies *Colour is a verdict*.
-- 2026-10-19 00:24, 1.17.1. Explanations live in the opened evidence row, not tooltips.
+- 2026-10-28 18:31, 1.19.0. Explanations live in the opened evidence row, not tooltips.
   Opening the row is the reader asking; a tooltip would add a hover nobody
-  finds. Tooltips only go on things that don't open. Applies *Answers in the order they're asked*.
+  finds. Tooltips only go on things that don't open. Applies none.
 - 2026-10-19 00:24, 1.17.1. Typos are evidence, counted per word. A "5★ typos" row shows the
   share of words misspelled by rating; per review, long reviews look worse just
   for being long. Typos don't feed the verdict: no study found them to separate
