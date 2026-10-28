@@ -76,12 +76,15 @@ fi
 
 VERSION=$(jq -r .version manifest.json 2>/dev/null || echo "dev")
 
-# Archive any previously-built zips into old_versions/ so artifacts/
-# only ever holds the build we're about to make.
+# Archive other versions' zips into old_versions/ so artifacts/ only ever holds
+# this version's build. This version's zips stay to be overwritten: archived, a
+# rebuild at the same version would leave a copy of itself in old_versions/.
+# tests/old-versions.mjs runs this block on scratch zips.
 echo "🗄  Archiving previous builds to old_versions/..."
 mkdir -p artifacts/old_versions
 shopt -s nullglob
 for zip in artifacts/*.zip; do
+    case "$zip" in "artifacts/momus-${VERSION}-"*.zip) continue ;; esac
     mv "$zip" artifacts/old_versions/
     echo "   moved $(basename "$zip")"
 done
