@@ -22,10 +22,11 @@ disagree on a case, the owner decides and the winner moves up. The hook in
   tokens, fonts and dark ground), so the owner's tools read as one set. Where
   Momus's job differs, the job wins: WebTime never uses red, but Momus judges a
   place, so *Colour is a verdict* comes first.
-- 2026-10-22 02:20, 1.19.0. **Claims no more than the data knows.** Words, the verdict and colour claim
+- 2026-10-28 20:55, 1.19.0. **Claims no more than the data knows.** Words, the verdict and colour claim
   only what the evidence supports. Momus knows a review's stars, not what it
   thinks of a topic, and a signal no study has shown to tell fake reviews from
-  real ones is shown as evidence, not scored.
+  real ones is shown as evidence, not scored. Why: the owner chooses where to
+  live by what Momus says, so one overclaim makes every number doubtful.
 - 2026-10-22 02:20, 1.19.0. **Easy to read and follow.** Text reads without effort on the dark ground,
   feedback shows where the eye already is after acting, and nothing moves what
   the user is aiming at. Dark apps are "always such a pain" to read, and a
