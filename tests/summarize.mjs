@@ -1,4 +1,4 @@
-// Law: the results view colours numbers by the cut-offs in dev/features/analysis.md (Calls), counts
+// Test: the results view colours numbers by the cut-offs in dev/features/analysis.md (Calls), counts
 // a review once per red-flag group, and hides typos it can't trust.
 //
 // Usage: node tests/summarize.mjs [repo-root]

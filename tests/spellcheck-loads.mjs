@@ -1,4 +1,4 @@
-// Law: the spell checker loads in the content scripts' scope and catches
+// Test: the spell checker loads in the content scripts' scope and catches
 // misspellings.
 //
 // Every saved scrape once reported 0 spelling errors across ~4,000 reviews:

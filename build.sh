@@ -5,7 +5,7 @@
 #                         it reloads itself whenever a source file changes.
 #   ./build.sh chrome     Same, in Chrome.
 #   ./build.sh package    Build the Firefox and Chrome zips into artifacts/.
-#   ./build.sh check      Run every law in tests/ (rules a bug once broke).
+#   ./build.sh check      Run every check in tests/ (rules a bug once broke).
 #   ./build.sh check --drives  The same, plus the drives (none yet).
 #
 # Uses the project-local web-ext (a devDependency) via npx, so the build is
@@ -31,11 +31,11 @@ esac
 
 if [ "$MODE" = "check" ]; then
     failed=0
-    for law in tests/*.mjs; do
-        node "$law" || failed=1
+    for check in tests/*.mjs; do
+        node "$check" || failed=1
     done
-    [ "$failed" = 0 ] || { echo "❌ A law failed. Each message above says what broke and how to fix it."; exit 1; }
-    echo "✅ All laws hold."
+    [ "$failed" = 0 ] || { echo "❌ A check failed. Each message above says what broke and how to fix it."; exit 1; }
+    echo "✅ All checks pass."
     case "${2:-}" in
         "") ;;
         --drives) echo "No drives yet, so check --drives ran the same checks." ;;

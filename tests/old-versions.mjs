@@ -1,4 +1,4 @@
-// Law: build.sh moves other versions' zips into artifacts/old_versions/ and leaves this
+// Test: build.sh moves other versions' zips into artifacts/old_versions/ and leaves this
 // version's alone. Archiving its own zips, a rebuild at the same version left a copy of
 // itself in old_versions/ (Chronicle's build did). Runs build.sh's own archive block on
 // scratch zips.
